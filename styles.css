@@ -43,11 +43,10 @@ body, html {
     top: 10px;
     left: 10px;
     height: 95%;
-    overflow-y: auto;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease;
     display: flex;
     max-width: 300px;
 }
@@ -55,11 +54,28 @@ body, html {
 #menu {
     padding: 10px;
     max-width: 250px;
+    overflow-y: auto;
 }
 
 #menuToggle {
     width: 30px;
     height: 30px;
-   
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    position: relative;
+    left: -30px;
+    top: 0;
+    font-size: 20px;
+}
 
+#menuContainer.collapsed {
+    transform: translateX(-250px);
+}
 
+#menuContainer.collapsed #menuToggle {
+    left: 0;
+}
