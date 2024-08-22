@@ -43,11 +43,44 @@ body, html {
     top: 10px;
     left: 10px;
     height: 95%;
-    overflow-y: auto;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease;
     display: flex;
+    flex-direction: column; /* Ensures proper alignment of content */
+    max-width: 300px;
+    overflow: hidden; /* Hide overflow when collapsed */
+    position: relative; /* Ensures menu toggle positioning is relative to this container */
 }
 
+#menu {
+    padding: 10px;
+    max-width: 250px;
+    overflow-y: auto;
+    margin-left: 40px; /* Ensure space for toggle button */
+}
+
+#menuToggle {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    position: absolute;
+    left: -30px; /* Adjusted position for the toggle button */
+    top: 10px;
+    font-size: 20px;
+    transition: left 0.3s ease; /* Smooth transition for button position */
+}
+
+#menuContainer.collapsed {
+    transform: translateX(-250px); /* Hide menu off-screen when collapsed */
+}
+
+#menuContainer.collapsed #menuToggle {
+    left: 0; /* Show toggle button when menu is collapsed */
+}
