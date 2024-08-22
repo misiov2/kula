@@ -36,8 +36,7 @@
     <script>
         let balls = [];
         let gravity = 0.2;
-        let boostCounter = 0;
-        const boostAmount = 10;
+        let boostAmount = 10;
         let statsVisible = false;
         let bounceCounter = 0;
 
@@ -65,22 +64,18 @@
             document.getElementById("ballCount").innerText = balls.length;
         }
 
-        function getRandomColor() {
-            return '#' + Math.floor(Math.random() * 16777215).toString(16);
-        }
-
         function update() {
             for (let i = 0; i < balls.length; i++) {
                 let ballA = balls[i];
                 let currentTopA = parseFloat(ballA.element.style.top);
                 let currentLeftA = parseFloat(ballA.element.style.left);
-                let sizeA = parseFloat(ballA.element.style.height);
+                let sizeA = parseFloat(ballA.element.style.width);
 
                 for (let j = i + 1; j < balls.length; j++) {
                     let ballB = balls[j];
                     let currentTopB = parseFloat(ballB.element.style.top);
                     let currentLeftB = parseFloat(ballB.element.style.left);
-                    let sizeB = parseFloat(ballB.element.style.height);
+                    let sizeB = parseFloat(ballB.element.style.width);
 
                     let dx = currentLeftB - currentLeftA;
                     let dy = currentTopB - currentTopA;
@@ -165,6 +160,10 @@
 
         function changeBackground() {
             document.body.style.backgroundColor = getRandomColor();
+        }
+
+        function getRandomColor() {
+            return '#' + Math.floor(Math.random() * 16777215).toString(16);
         }
 
         update();
