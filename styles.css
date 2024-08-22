@@ -18,12 +18,11 @@ body, html {
     transition: transform 0.3s ease; /* Animacja przejścia przy zwijaniu/menu */
     display: flex;
     flex-direction: column; /* Układ elementów w kolumnie */
+    overflow-y: auto; /* Przewijanie, jeśli zawartość przekroczy wysokość */
 }
 
 #menu {
     padding: 10px; /* Wewnętrzne marginesy w menu */
-    max-width: 100%; /* Menu nie może przekroczyć szerokości kontenera */
-    overflow-y: auto; /* Przewijanie, jeśli zawartość przekroczy wysokość */
 }
 
 #menuToggle {
