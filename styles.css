@@ -3,53 +3,69 @@ body, html {
     padding: 0;
     height: 100%;
     overflow: hidden;
-    background-color: #87CEEB;
+    background-color: #87CEEB; /* Kolor tła strony */
 }
 
 #menuContainer {
-    position: absolute;
-    top: 10px;
+    position: fixed; /* Menu jest umieszczone na stałe na ekranie */
+    top: 0;
     left: 0;
-    height: 95%;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease;
+    height: 100%; /* Menu zajmuje całą wysokość ekranu */
+    width: 300px; /* Szerokość menu */
+    background-color: rgba(255, 255, 255, 0.8); /* Tło menu z przezroczystością */
+    border-radius: 5px; /* Zaokrąglone narożniki */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Cień menu */
+    transition: transform 0.3s ease; /* Animacja przejścia przy zwijaniu/menu */
     display: flex;
-    flex-direction: column;
-    width: 300px;
-    overflow: hidden; /* Hide overflow when collapsed */
+    flex-direction: column; /* Układ elementów w kolumnie */
 }
 
 #menu {
-    padding: 10px;
-    max-width: 250px;
-    overflow-y: auto;
+    padding: 10px; /* Wewnętrzne marginesy w menu */
+    max-width: 100%; /* Menu nie może przekroczyć szerokości kontenera */
+    overflow-y: auto; /* Przewijanie, jeśli zawartość przekroczy wysokość */
 }
 
 #menuToggle {
     width: 30px;
     height: 30px;
-    background-color: #ddd;
-    color: #333;
-    border-radius: 50%;
+    background-color: #ddd; /* Tło przycisku przełączania */
+    color: #333; /* Kolor tekstu w przycisku */
+    border-radius: 50%; /* Okrągły przycisk */
     position: absolute;
     top: 10px;
-    left: 0;
-    cursor: pointer;
+    right: -40px; /* Umiejscowienie przycisku poza menu */
+    cursor: pointer; /* Wskaźnik zmienia się na rękę przy najechaniu */
     font-size: 20px;
     text-align: center;
-    line-height: 30px;
+    line-height: 30px; /* Wyrównanie tekstu w pionie */
 }
 
 #menuContainer.collapsed {
-    transform: translateX(-100%);
+    transform: translateX(-100%); /* Przesunięcie menu poza ekran */
 }
 
 #menuContainer:not(.collapsed) #menu {
-    display: block;
+    display: block; /* Wyświetlanie menu, gdy nie jest zwinięte */
 }
 
 #menuContainer.collapsed #menu {
-    display: none;
+    display: none; /* Ukrywanie menu, gdy jest zwinięte */
+}
+
+.ball {
+    position: absolute; /* Piłki są pozycjonowane absolutnie względem kontenera */
+    border-radius: 50%; /* Piłki mają okrągły kształt */
+    background-color: #ff0000; /* Domyślny kolor piłki */
+    transition: filter 0.3s ease; /* Animacja zmiany efektu rozmycia */
+}
+
+#stats {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
