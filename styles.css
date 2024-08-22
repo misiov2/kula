@@ -48,10 +48,10 @@ body, html {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease;
     display: flex;
-    flex-direction: column; /* Ensures proper alignment of content */
+    flex-direction: column;
     max-width: 300px;
     overflow: hidden; /* Hide overflow when collapsed */
-    position: relative; /* Ensures menu toggle positioning is relative to this container */
+    position: relative;
 }
 
 #menu {
@@ -63,24 +63,4 @@ body, html {
 
 #menuToggle {
     width: 30px;
-    height: 30px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    position: absolute;
-    left: -30px; /* Adjusted position for the toggle button */
-    top: 10px;
-    font-size: 20px;
-    transition: left 0.3s ease; /* Smooth transition for button position */
-}
-
-#menuContainer.collapsed {
-    transform: translateX(-250px); /* Hide menu off-screen when collapsed */
-}
-
-#menuContainer.collapsed #menuToggle {
-    left: 0; /* Show toggle button when menu is collapsed */
-}
+    height: 
