@@ -1,173 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animated Ball with Gravity</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div id="content">
-        <h1>MISIEK</h1>
-    </div>
-    <div id="menuContainer" class="collapsed">
-        <div id="menu">
-            <label for="ballColor">Ball Color:</label><br>
-            <input type="color" id="ballColor" value="#ff0000"><br>
-            <label for="ballSize">Ball Size:</label><br>
-            <input type="number" id="ballSize" value="50"><br>
-            <label for="ballSpeed">Ball Speed:</label><br>
-            <input type="number" id="ballSpeed" value="2"><br>
-            <button id="addBallButton" onclick="addBall()">Add Ball</button><br><br>
-            <label for="statsToggle">Show Stats:</label>
-            <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
-            <label for="blurAmount">Motion Blur:</label>
-            <input type="range" id="blurAmount" min="0" max="10" value="0" onchange="updateBlur()"><br><br>
-            <button id="clearButton" onclick="clearBalls()">Clear Balls</button><br><br>
-            <button id="backgroundButton" onclick="changeBackground()">Change Background</button>
-        </div>
-        <div id="menuToggle" onclick="toggleMenu()">&#9654;</div>
-    </div>
-    <div id="stats" style="display: none;">
-        Bounce Count: <span id="bounceCount">0</span><br>
-        Ball Count: <span id="ballCount">0</span>
-    </div>
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    background-color: #87CEEB;
+}
 
-    <script>
-        let balls = [];
-        let gravity = 0.2;
-        let boostCounter = 0;
-        const boostAmount = 10;
-        let statsVisible = false;
-        let bounceCounter = 0;
+@font-face {
+    font-family: 'Quicksand';
+    src: url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+}
 
-        function addBall() {
-            let size = document.getElementById("ballSize").value;
-            let speed = document.getElementById("ballSpeed").value;
-            let color = document.getElementById("ballColor").value;
-            createBall(size, speed, color);
-        }
+#content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-family: 'Quicksand', sans-serif;
+}
 
-        function createBall(size, speed, color) {
-            let ball = document.createElement("div");
-            ball.className = "ball";
-            ball.style.width = size + "px";
-            ball.style.height = size + "px";
-            ball.style.backgroundColor = color;
-            ball.style.left = Math.random() * (window.innerWidth - size) + "px";
-            ball.style.top = Math.random() * (window.innerHeight - size) + "px";
-            document.body.appendChild(ball);
-            balls.push({ element: ball, speedX: Math.random() * 10 - 5, speedY: parseFloat(speed), bounceCount: 0 });
-            updateBallCount();
-        }
+#content h1 {
+    font-size: 48px;
+    color: rgba(0, 0, 0, 0.1);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    filter: blur(2px);
+    margin: 0;
+}
 
-        function updateBallCount() {
-            document.getElementById("ballCount").innerText = balls.length;
-        }
+.ball {
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    filter: blur(0px); /* Default value */
+}
 
-        function getRandomColor() {
-            return '#' + Math.floor(Math.random() * 16777215).toString(16);
-        }
+#menuContainer {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    height: 95%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column; /* Ensures proper alignment of content */
+    max-width: 300px;
+    overflow: hidden; /* Hide overflow when collapsed */
+    position: relative; /* Ensures menu toggle positioning is relative to this container */
+}
 
-        function update() {
-            for (let i = 0; i < balls.length; i++) {
-                let ballA = balls[i];
-                let currentTopA = parseFloat(ballA.element.style.top);
-                let currentLeftA = parseFloat(ballA.element.style.left);
-                let sizeA = parseFloat(ballA.element.style.height);
+#menu {
+    padding: 10px;
+    max-width: 250px;
+    overflow-y: auto;
+    margin-left: 40px; /* Ensure space for toggle button */
+}
 
-                for (let j = i + 1; j < balls.length; j++) {
-                    let ballB = balls[j];
-                    let currentTopB = parseFloat(ballB.element.style.top);
-                    let currentLeftB = parseFloat(ballB.element.style.left);
-                    let sizeB = parseFloat(ballB.element.style.height);
+#menuToggle {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    position: absolute;
+    left: -30px; /* Adjusted position for the toggle button */
+    top: 10px;
+    font-size: 20px;
+    transition: left 0.3s ease; /* Smooth transition for button position */
+}
 
-                    let dx = currentLeftB - currentLeftA;
-                    let dy = currentTopB - currentTopA;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    let minDistance = sizeA / 2 + sizeB / 2;
+#menuContainer.collapsed {
+    transform: translateX(-250px); /* Hide menu off-screen when collapsed */
+}
 
-                    if (distance < minDistance) {
-                        let angle = Math.atan2(dy, dx);
-                        let targetX = currentLeftA + Math.cos(angle) * minDistance;
-                        let targetY = currentTopA + Math.sin(angle) * minDistance;
-
-                        let ax = (targetX - currentLeftA) * 0.1;
-                        let ay = (targetY - currentTopA) * 0.1;
-
-                        ballA.speedX -= ax;
-                        ballA.speedY -= ay;
-                        ballB.speedX += ax;
-                        ballB.speedY += ay;
-                    }
-                }
-
-                if (currentTopA >= window.innerHeight - sizeA) {
-                    ballA.speedY *= -0.9;
-                    ballA.bounceCount++;
-                    bounceCounter++;
-                    if (ballA.bounceCount % 5 === 0) {
-                        ballA.speedY -= boostAmount;
-                    }
-                } else if (currentTopA <= 0) {
-                    ballA.speedY *= -1;
-                } else {
-                    ballA.speedY += gravity;
-                }
-
-                if (currentLeftA <= 0 || currentLeftA >= window.innerWidth - sizeA) {
-                    ballA.speedX *= -1;
-                }
-
-                ballA.element.style.top = Math.min(Math.max(currentTopA + ballA.speedY, 0), window.innerHeight - sizeA) + "px";
-                ballA.element.style.left = Math.min(Math.max(currentLeftA + ballA.speedX, 0), window.innerWidth - sizeA) + "px";
-            }
-
-            document.getElementById("bounceCount").innerText = bounceCounter;
-
-            requestAnimationFrame(update);
-        }
-
-        function toggleMenu() {
-            let menuContainer = document.getElementById("menuContainer");
-            menuContainer.classList.toggle("collapsed");
-
-            let toggle = document.getElementById("menuToggle");
-            if (menuContainer.classList.contains("collapsed")) {
-                toggle.innerHTML = "&#9654;"; // Arrow pointing right
-            } else {
-                toggle.innerHTML = "&#9664;"; // Arrow pointing left
-            }
-        }
-
-        function toggleStats() {
-            statsVisible = !statsVisible;
-            let stats = document.getElementById("stats");
-            stats.style.display = statsVisible ? "block" : "none";
-        }
-
-        function updateBlur() {
-            let blurValue = document.getElementById("blurAmount").value;
-            document.querySelectorAll(".ball").forEach(ball => {
-                ball.style.filter = `blur(${blurValue}px)`;
-            });
-        }
-
-        function clearBalls() {
-            balls.forEach(ball => {
-                ball.element.remove();
-            });
-            balls = [];
-            bounceCounter = 0;
-            updateBallCount();
-            document.getElementById("bounceCount").innerText = bounceCounter;
-        }
-
-        function changeBackground() {
-            document.body.style.backgroundColor = getRandomColor();
-        }
-
-        update();
-    </script>
-</body>
-</html>
+#menuContainer.collapsed #menuToggle {
+    left: 0; /* Show toggle button when menu is collapsed */
+}
