@@ -51,7 +51,6 @@
             let color = document.getElementById("ballColor").value;
             createBall(size, speed, color);
             document.getElementById("ballCount").innerText = balls.length;
-            animateHeader();
         }
 
         function createBall(size, speed, color) {
@@ -138,12 +137,12 @@
                 menu.style.maxHeight = "0";
                 menu.style.opacity = "0";
                 menu.style.padding = "0";
-                menuToggle.innerHTML = "&#9664;";
+                menuToggle.innerHTML = "&#9664;"; // Left arrow
             } else {
-                menu.style.maxHeight = "300px"; // Możesz dostosować wysokość według potrzeb
+                menu.style.maxHeight = "300px"; // Adjust height as needed
                 menu.style.opacity = "1";
                 menu.style.padding = "10px";
-                menuToggle.innerHTML = "&#9654;";
+                menuToggle.innerHTML = "&#9654;"; // Right arrow
             }
             menuVisible = !menuVisible;
         }
@@ -172,16 +171,6 @@
             document.getElementById("ballCount").innerText = balls.length;
         }
 
-        function animateHeader() {
-            let header = document.querySelector("#content h1");
-            header.style.color = getRandomColor();
-            header.style.transition = "all 0.5s";
-            header.style.transform = "scale(1.2)";
-            setTimeout(() => {
-                header.style.transform = "scale(1)";
-            }, 500);
-        }
-
         update();
 
         // Responsive adjustments
@@ -202,4 +191,5 @@
     </script>
 </body>
 </html>
+
 
