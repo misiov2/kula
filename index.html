@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Animated Ball with Gravity</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div id="content">
         <h1>MISIEK</h1>
@@ -13,24 +15,29 @@
     <div id="menuContainer">
         <div id="menuToggle" onclick="toggleMenu()">&#9664;</div>
         <div id="menu">
-            <label for="ballColor">Ball Color:</label><br>
-            <input type="color" id="ballColor" value="#ff0000"><br>
-            <label for="ballSize">Ball Size:</label><br>
-            <input type="number" id="ballSize" value="50"><br>
-            <label for="ballSpeed">Ball Speed:</label><br>
-            <input type="number" id="ballSpeed" value="2"><br>
-            <button class="button" onclick="addBall()">Add Ball</button><br><br>
-            <label for="statsToggle">Show Stats:</label><br>
-            <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
-            <button class="button" onclick="changeBackground()">Change Background</button><br><br>
-            <label for="motionBlur">Motion Blur:</label><br>
-            <input type="range" id="motionBlur" min="0" max="20" value="0" oninput="updateMotionBlur(this.value)"><br>
-            <span id="blurValue">0px</span><br><br>
-            <button class="button" onclick="clearBalls()">Clear Balls</button>
+            <label for="ballColor">Ball Color:</label>
+            <input type="color" id="ballColor" value="#ff0000">
+
+            <label for="ballSize">Ball Size:</label>
+            <input type="number" id="ballSize" value="50">
+
+            <label for="ballSpeed">Ball Speed:</label>
+            <input type="number" id="ballSpeed" value="2">
+
+            <button onclick="addBall()">Add Ball</button>
+
+            <label for="statsToggle">Show Stats:</label>
+            <input type="checkbox" id="statsToggle" onchange="toggleStats()">
+
+            <button onclick="changeBackground()">Change Background</button>
+            <button onclick="clearBalls()">Clear Balls</button>
+
+            <label for="blurAmount">Motion Blur:</label>
+            <input type="range" id="blurAmount" min="0" max="10" value="0" onchange="updateBlur()">
         </div>
     </div>
     <div id="helpBox" onclick="toggleMenu()">?</div>
-    <div id="stats" style="display: none;">
+    <div id="stats">
         Bounce Count: <span id="bounceCount">0</span><br>
         Ball Count: <span id="ballCount">0</span>
     </div>
@@ -38,19 +45,15 @@
     <script>
         let balls = [];
         let gravity = 0.2;
-        let boostCounter = 0;
-        const boostAmount = 10;
-        let statsVisible = false;
         let bounceCounter = 0;
-        let menuVisible = true;
-        let motionBlur = 0;
+        let statsVisible = false;
 
         function addBall() {
             let size = document.getElementById("ballSize").value;
             let speed = document.getElementById("ballSpeed").value;
             let color = document.getElementById("ballColor").value;
             createBall(size, speed, color);
-            document.getElementById("ballCount").innerText = balls.length;
+            updateBallCount();
         }
 
         function createBall(size, speed, color) {
@@ -62,89 +65,71 @@
             ball.style.left = Math.random() * (window.innerWidth - size) + "px";
             ball.style.top = Math.random() * (window.innerHeight - size) + "px";
             document.body.appendChild(ball);
-            balls.push({ element: ball, speedX: Math.random() * 10 - 5, speedY: parseFloat(speed), bounceCount: 0 });
-        }
-
-        function getRandomColor() {
-            return '#' + Math.floor(Math.random() * 16777215).toString(16);
+            balls.push({ element: ball, speedX: Math.random() * 10 - 5, speedY: parseFloat(speed) });
         }
 
         function update() {
             for (let i = 0; i < balls.length; i++) {
-                let ballA = balls[i];
-                let currentTopA = parseFloat(ballA.element.style.top);
-                let currentLeftA = parseFloat(ballA.element.style.left);
-                let sizeA = parseFloat(ballA.element.style.height);
+                let ball = balls[i];
+                let currentTop = parseFloat(ball.element.style.top);
+                let currentLeft = parseFloat(ball.element.style.left);
+                let size = parseFloat(ball.element.style.height);
 
-                for (let j = i + 1; j < balls.length; j++) {
-                    let ballB = balls[j];
-                    let currentTopB = parseFloat(ballB.element.style.top);
-                    let currentLeftB = parseFloat(ballB.element.style.left);
-                    let sizeB = parseFloat(ballB.element.style.height);
-
-                    let dx = currentLeftB - currentLeftA;
-                    let dy = currentTopB - currentTopA;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    let minDistance = sizeA / 2 + sizeB / 2;
-
-                    if (distance < minDistance) {
-                        let angle = Math.atan2(dy, dx);
-                        let targetX = currentLeftA + Math.cos(angle) * minDistance;
-                        let targetY = currentTopA + Math.sin(angle) * minDistance;
-
-                        let ax = (targetX - currentLeftA) * 0.1;
-                        let ay = (targetY - currentTopA) * 0.1;
-
-                        ballA.speedX -= ax;
-                        ballA.speedY -= ay;
-                        ballB.speedX += ax;
-                        ballB.speedY += ay;
-                    }
-                }
-
-                if (currentTopA >= window.innerHeight - sizeA) {
-                    ballA.speedY *= -0.9;
-                    ballA.bounceCount++;
+                // Gravity
+                if (currentTop >= window.innerHeight - size) {
+                    ball.speedY *= -0.9;
                     bounceCounter++;
-                    if (ballA.bounceCount % 10 === 0) {
-                        ballA.speedY -= boostAmount;
-                    }
-                } else if (currentTopA <= 0) {
-                    ballA.speedY *= -1;
+                } else if (currentTop <= 0) {
+                    ball.speedY *= -1;
                 } else {
-                    ballA.speedY += gravity;
+                    ball.speedY += gravity;
                 }
 
-                if (currentLeftA <= 0 || currentLeftA >= window.innerWidth - sizeA) {
-                    ballA.speedX *= -1;
+                if (currentLeft <= 0 || currentLeft >= window.innerWidth - size) {
+                    ball.speedX *= -1;
                 }
 
-                ballA.element.style.top = Math.min(Math.max(currentTopA + ballA.speedY, 0), window.innerHeight - sizeA) + "px";
-                ballA.element.style.left = Math.min(Math.max(currentLeftA + ballA.speedX, 0), window.innerWidth - sizeA) + "px";
-                ballA.element.style.filter = `blur(${motionBlur}px)`;  // Apply motion blur effect
+                ball.element.style.top = Math.min(Math.max(currentTop + ball.speedY, 0), window.innerHeight - size) + "px";
+                ball.element.style.left = Math.min(Math.max(currentLeft + ball.speedX, 0), window.innerWidth - size) + "px";
             }
 
             document.getElementById("bounceCount").innerText = bounceCounter;
-            document.getElementById("ballCount").innerText = balls.length;
-
             requestAnimationFrame(update);
         }
 
-        function toggleMenu() {
-            let menu = document.getElementById("menu");
-            let menuToggle = document.getElementById("menuToggle");
-            if (menuVisible) {
-                menu.style.maxHeight = "0";
-                menu.style.opacity = "0";
-                menu.style.padding = "0";
-                menuToggle.innerHTML = "&#9664;"; // Left arrow
-            } else {
-                menu.style.maxHeight = "400px"; // Adjust height as needed
-                menu.style.opacity = "1";
-                menu.style.padding = "10px";
-                menuToggle.innerHTML = "&#9654;"; // Right arrow
+        function updateBlur() {
+            let blurAmount = document.getElementById("blurAmount").value;
+            for (let ball of balls) {
+                ball.element.style.filter = `blur(${blurAmount}px)`;
             }
-            menuVisible = !menuVisible;
+        }
+
+        function changeBackground() {
+            document.body.style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+        }
+
+        function clearBalls() {
+            balls.forEach(ball => ball.element.remove());
+            balls = [];
+            bounceCounter = 0;
+            updateBallCount();
+            document.getElementById("bounceCount").innerText = bounceCounter;
+        }
+
+        function updateBallCount() {
+            document.getElementById("ballCount").innerText = balls.length;
+        }
+
+        function toggleMenu() {
+            let menu = document.getElementById("menuContainer");
+            let toggleButton = document.getElementById("menuToggle");
+            if (menu.style.transform === "translateX(-300px)") {
+                menu.style.transform = "translateX(0)";
+                toggleButton.innerHTML = "&#9664;";
+            } else {
+                menu.style.transform = "translateX(-300px)";
+                toggleButton.innerHTML = "&#9654;";
+            }
         }
 
         function toggleStats() {
@@ -153,41 +138,8 @@
             stats.style.display = statsVisible ? "block" : "none";
         }
 
-        function changeBackground() {
-            let newColor = getRandomColor();
-            document.body.style.backgroundColor = newColor;
-        }
-
-        function updateMotionBlur(value) {
-            motionBlur = value;
-            document.getElementById("blurValue").innerText = value + "px";
-        }
-
-        function clearBalls() {
-            while (balls.length > 0) {
-                let ball = balls.pop();
-                document.body.removeChild(ball.element);
-            }
-            document.getElementById("ballCount").innerText = balls.length;
-        }
-
         update();
-
-        // Responsive adjustments
-        function adjustForMobile() {
-            if (window.innerWidth <= 768) { // For devices with width 768px or less
-                document.getElementById("menuContainer").style.fontSize = "14px";
-                document.getElementById("menu").style.width = "90%";
-                document.getElementById("stats").style.fontSize = "14px";
-            } else {
-                document.getElementById("menuContainer").style.fontSize = "";
-                document.getElementById("menu").style.width = "220px";
-                document.getElementById("stats").style.fontSize = "";
-            }
-        }
-
-        window.addEventListener('resize', adjustForMobile);
-        adjustForMobile();
     </script>
 </body>
+
 </html>
