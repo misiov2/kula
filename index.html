@@ -10,7 +10,7 @@
     <div id="content">
         <h1>MISIEK</h1>
     </div>
-    <div id="menuContainer" class="collapsed">
+    <div id="menuContainer">
         <div id="menu">
             <label for="ballColor">Ball Color:</label><br>
             <input type="color" id="ballColor" value="#ff0000"><br>
@@ -26,7 +26,7 @@
             <button id="clearButton" onclick="clearBalls()">Clear Balls</button><br><br>
             <button id="backgroundButton" onclick="changeBackground()">Change Background</button>
         </div>
-        <div id="menuToggle" onclick="toggleMenu()">&#9654;</div>
+        <div id="menuToggle" onclick="toggleMenu()">&#9664;</div>
     </div>
     <div id="stats" style="display: none;">
         Bounce Count: <span id="bounceCount">0</span><br>
@@ -129,14 +129,14 @@
         }
 
         function toggleMenu() {
-            let menuContainer = document.getElementById("menuContainer");
-            menuContainer.classList.toggle("collapsed");
-
+            let menu = document.getElementById("menu");
             let toggle = document.getElementById("menuToggle");
-            if (menuContainer.classList.contains("collapsed")) {
-                toggle.innerHTML = "&#9654;"; // Arrow pointing right
+            if (menu.style.transform === "translateX(-100%)") {
+                menu.style.transform = "translateX(0)";
+                toggle.innerHTML = "&#9664;";
             } else {
-                toggle.innerHTML = "&#9664;"; // Arrow pointing left
+                menu.style.transform = "translateX(-100%)";
+                toggle.innerHTML = "&#9654;";
             }
         }
 
