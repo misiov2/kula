@@ -36,6 +36,7 @@ body, html {
     background-color: red;
     border-radius: 50%;
     position: absolute;
+    transition: filter 0.3s; /* Smooth transition for blur effect */
 }
 
 #menuContainer {
@@ -44,7 +45,23 @@ body, html {
     left: 10px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+}
+
+#menuToggle {
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    line-height: 20px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#menuToggle:hover {
+    background-color: #555;
 }
 
 #menu {
@@ -54,7 +71,8 @@ body, html {
     transition: max-height 0.5s ease, opacity 0.5s ease, padding 0.5s ease;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 5px;
-    width: 220px; /* Dostosuj szerokość według potrzeb */
+    width: 220px; /* Adjust width as needed */
+    padding: 10px;
 }
 
 #menu input[type="number"],
@@ -79,23 +97,6 @@ body, html {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-#menuToggle {
-    background-color: #000;
-    color: #fff;
-    text-align: center;
-    line-height: 20px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-#menuToggle:hover {
-    background-color: #555;
-}
-
 #helpBox {
     position: absolute;
     top: 10px;
@@ -117,3 +118,23 @@ body, html {
     font-size: 16px;
     color: rgba(0, 0, 0, 0.5);
 }
+
+#stats span {
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    #menuContainer {
+        font-size: 14px;
+    }
+
+    #menu {
+        width: 90%;
+        font-size: 14px;
+    }
+
+    #stats {
+        font-size: 14px;
+    }
+}
+
