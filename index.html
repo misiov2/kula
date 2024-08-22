@@ -19,10 +19,13 @@
             <input type="number" id="ballSize" value="50"><br>
             <label for="ballSpeed">Ball Speed:</label><br>
             <input type="number" id="ballSpeed" value="2"><br>
-            <button onclick="addBall()">Add Ball</button><br><br>
+            <button class="button" onclick="addBall()">Add Ball</button><br><br>
             <label for="statsToggle">Show Stats:</label><br>
             <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
-            <button onclick="changeBackground()">Change Background</button><br><br>
+            <button class="button" onclick="changeBackground()">Change Background</button><br><br>
+            <label for="motionBlur">Motion Blur:</label><br>
+            <input type="range" id="motionBlur" min="0" max="20" value="0" oninput="updateMotionBlur(this.value)"><br>
+            <span id="blurValue">0px</span>
         </div>
     </div>
     <div id="helpBox" onclick="toggleMenu()">?</div>
@@ -39,6 +42,7 @@
         let statsVisible = false;
         let bounceCounter = 0;
         let menuVisible = true;
+        let motionBlur = 0;
 
         function addBall() {
             let size = document.getElementById("ballSize").value;
@@ -117,6 +121,7 @@
 
                 ballA.element.style.top = Math.min(Math.max(currentTopA + ballA.speedY, 0), window.innerHeight - sizeA) + "px";
                 ballA.element.style.left = Math.min(Math.max(currentLeftA + ballA.speedX, 0), window.innerWidth - sizeA) + "px";
+                ballA.element.style.filter = `blur(${motionBlur}px)`;  // Apply motion blur effect
             }
 
             document.getElementById("bounceCount").innerText = bounceCounter;
@@ -133,7 +138,7 @@
                 menu.style.padding = "0";
                 menuToggle.innerHTML = "&#9664;";
             } else {
-                menu.style.maxHeight = "300px"; // Możesz dostosować wysokość
+                menu.style.maxHeight = "300px"; // Możesz dostosować wysokość według potrzeb
                 menu.style.opacity = "1";
                 menu.style.padding = "10px";
                 menuToggle.innerHTML = "&#9654;";
@@ -152,6 +157,11 @@
             document.body.style.backgroundColor = newColor;
         }
 
+        function updateMotionBlur(value) {
+            motionBlur = value;
+            document.getElementById("blurValue").innerText = value + "px";
+        }
+
         function animateHeader() {
             let header = document.querySelector("#content h1");
             header.style.color = getRandomColor();
@@ -166,4 +176,3 @@
     </script>
 </body>
 </html>
-
