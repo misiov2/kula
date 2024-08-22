@@ -10,17 +10,26 @@
     <div id="content">
         <h1>MISIEK</h1>
     </div>
-    <div id="menu" style="display: none;">
-        <label for="ballSize">Ball Size:</label><br>
-        <input type="number" id="ballSize" value="50"><br>
-        <label for="ballSpeed">Ball Speed:</label><br>
-        <input type="number" id="ballSpeed" value="2"><br>
-        <button onclick="addBall()">Add Ball</button><br><br>
-        <label for="statsToggle">Show Stats:</label><br>
-        <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
+    <div id="menuContainer">
+        <div id="menuToggle" onclick="toggleMenu()">&#9664;</div>
+        <div id="menu">
+            <label for="ballColor">Ball Color:</label><br>
+            <input type="color" id="ballColor" value="#ff0000"><br>
+            <label for="ballSize">Ball Size:</label><br>
+            <input type="number" id="ballSize" value="50"><br>
+            <label for="ballSpeed">Ball Speed:</label><br>
+            <input type="number" id="ballSpeed" value="2"><br>
+            <button onclick="addBall()">Add Ball</button><br><br>
+            <label for="statsToggle">Show Stats:</label><br>
+            <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
+            <button onclick="changeBackground()">Change Background</button><br><br>
+        </div>
     </div>
     <div id="helpBox" onclick="toggleMenu()">?</div>
-    <div id="stats" style="display: none;">Bounce Count: <span id="bounceCount">0</span></div>
+    <div id="stats" style="display: none;">
+        Bounce Count: <span id="bounceCount">0</span><br>
+        Ball Count: <span id="ballCount">0</span>
+    </div>
 
     <script>
         let balls = [];
@@ -29,19 +38,23 @@
         const boostAmount = 10;
         let statsVisible = false;
         let bounceCounter = 0;
+        let menuVisible = true;
 
         function addBall() {
             let size = document.getElementById("ballSize").value;
             let speed = document.getElementById("ballSpeed").value;
-            createBall(size, speed);
+            let color = document.getElementById("ballColor").value;
+            createBall(size, speed, color);
+            document.getElementById("ballCount").innerText = balls.length;
+            animateHeader();
         }
 
-        function createBall(size, speed) {
+        function createBall(size, speed, color) {
             let ball = document.createElement("div");
             ball.className = "ball";
             ball.style.width = size + "px";
             ball.style.height = size + "px";
-            ball.style.backgroundColor = getRandomColor();
+            ball.style.backgroundColor = color;
             ball.style.left = Math.random() * (window.innerWidth - size) + "px";
             ball.style.top = Math.random() * (window.innerHeight - size) + "px";
             document.body.appendChild(ball);
@@ -49,7 +62,7 @@
         }
 
         function getRandomColor() {
-            return '#' + Math.floor(Math.random()*16777215).toString(16);
+            return '#' + Math.floor(Math.random() * 16777215).toString(16);
         }
 
         function update() {
@@ -113,7 +126,19 @@
 
         function toggleMenu() {
             let menu = document.getElementById("menu");
-            menu.style.display = menu.style.display === "none" ? "block" : "none";
+            let menuToggle = document.getElementById("menuToggle");
+            if (menuVisible) {
+                menu.style.maxHeight = "0";
+                menu.style.opacity = "0";
+                menu.style.padding = "0";
+                menuToggle.innerHTML = "&#9664;";
+            } else {
+                menu.style.maxHeight = "300px"; // Możesz dostosować wysokość
+                menu.style.opacity = "1";
+                menu.style.padding = "10px";
+                menuToggle.innerHTML = "&#9654;";
+            }
+            menuVisible = !menuVisible;
         }
 
         function toggleStats() {
@@ -122,7 +147,23 @@
             stats.style.display = statsVisible ? "block" : "none";
         }
 
+        function changeBackground() {
+            let newColor = getRandomColor();
+            document.body.style.backgroundColor = newColor;
+        }
+
+        function animateHeader() {
+            let header = document.querySelector("#content h1");
+            header.style.color = getRandomColor();
+            header.style.transition = "all 0.5s";
+            header.style.transform = "scale(1.2)";
+            setTimeout(() => {
+                header.style.transform = "scale(1)";
+            }, 500);
+        }
+
         update();
     </script>
 </body>
 </html>
+
