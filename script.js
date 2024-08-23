@@ -93,19 +93,6 @@ document.addEventListener("DOMContentLoaded", function() {
         requestAnimationFrame(update);
     }
 
-    function toggleMenu() {
-        let menuContainer = document.getElementById("menuContainer");
-        menuContainer.classList.toggle("collapsed");
-        menuContainer.classList.toggle("expanded");
-
-        let toggle = document.getElementById("menuToggle");
-        if (menuContainer.classList.contains("collapsed")) {
-            toggle.innerHTML = "&#8226;"; // Kółko
-        } else {
-            toggle.innerHTML = "&#9654;"; // Strzałka w prawo
-        }
-    }
-
     function toggleStats() {
         statsVisible = !statsVisible;
         let stats = document.getElementById("stats");
@@ -133,32 +120,6 @@ document.addEventListener("DOMContentLoaded", function() {
         document.body.style.backgroundColor = getRandomColor();
     }
 
-    function makeDraggable() {
-        const menuContainer = document.getElementById("menuContainer");
-        let offsetX, offsetY, isDragging = false;
-
-        menuContainer.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            offsetX = e.clientX - parseFloat(window.getComputedStyle(menuContainer).left);
-            offsetY = e.clientY - parseFloat(window.getComputedStyle(menuContainer).top);
-            menuContainer.style.cursor = 'grabbing';
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                menuContainer.style.left = `${e.clientX - offsetX}px`;
-                menuContainer.style.top = `${e.clientY - offsetY}px`;
-            }
-        });
-
-        window.addEventListener('mouseup', () => {
-            isDragging = false;
-            menuContainer.style.cursor = 'grab';
-        });
-    }
-
     // Initialize
-    document.getElementById("menuToggle").addEventListener("click", toggleMenu);
-    makeDraggable();
     update();
 });
