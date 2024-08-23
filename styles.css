@@ -3,68 +3,84 @@ body, html {
     padding: 0;
     height: 100%;
     overflow: hidden;
-    background-color: #87CEEB; /* Kolor tła strony */
+    position: relative;
+    background-color: #87CEEB;
+}
+
+@font-face {
+    font-family: 'Quicksand';
+    src: url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+}
+
+#content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-family: 'Quicksand', sans-serif;
+}
+
+#content h1 {
+    font-size: 48px;
+    color: rgba(0, 0, 0, 0.1);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    filter: blur(2px);
+    margin: 0;
+}
+
+.ball {
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    filter: blur(0px); /* Default value */
 }
 
 #menuContainer {
-    position: fixed; /* Menu jest umieszczone na stałe na ekranie */
-    top: 0;
-    left: 0;
-    height: 100%; /* Menu zajmuje całą wysokość ekranu */
-    width: 300px; /* Szerokość menu */
-    background-color: rgba(255, 255, 255, 0.8); /* Tło menu z przezroczystością */
-    border-radius: 5px; /* Zaokrąglone narożniki */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Cień menu */
-    transition: transform 0.3s ease; /* Animacja przejścia przy zwijaniu/menu */
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    height: 95%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
     display: flex;
-    flex-direction: column; /* Układ elementów w kolumnie */
-    overflow-y: auto; /* Przewijanie, jeśli zawartość przekroczy wysokość */
+    max-width: 300px;
+    cursor: grab;
 }
 
 #menu {
-    padding: 10px; /* Wewnętrzne marginesy w menu */
+    padding: 10px;
+    max-width: 250px;
+    overflow-y: auto;
 }
 
 #menuToggle {
     width: 30px;
     height: 30px;
-    background-color: #ddd; /* Tło przycisku przełączania */
-    color: #333; /* Kolor tekstu w przycisku */
-    border-radius: 50%; /* Okrągły przycisk */
-    position: absolute;
-    top: 10px;
-    right: -40px; /* Umiejscowienie przycisku poza menu */
-    cursor: pointer; /* Wskaźnik zmienia się na rękę przy najechaniu */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    position: relative;
+    left: -30px;
+    top: 0;
     font-size: 20px;
-    text-align: center;
-    line-height: 30px; /* Wyrównanie tekstu w pionie */
 }
 
 #menuContainer.collapsed {
-    transform: translateX(-100%); /* Przesunięcie menu poza ekran */
+    transform: translateX(-250px);
 }
 
-#menuContainer:not(.collapsed) #menu {
-    display: block; /* Wyświetlanie menu, gdy nie jest zwinięte */
+#menuContainer.collapsed #menuToggle {
+    left: 0;
 }
 
-#menuContainer.collapsed #menu {
-    display: none; /* Ukrywanie menu, gdy jest zwinięte */
-}
-
-.ball {
-    position: absolute; /* Piłki są pozycjonowane absolutnie względem kontenera */
-    border-radius: 50%; /* Piłki mają okrągły kształt */
-    background-color: #ff0000; /* Domyślny kolor piłki */
-    transition: filter 0.3s ease; /* Animacja zmiany efektu rozmycia */
-}
-
-#stats {
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+#menuContainer.dragging {
+    cursor: grabbing;
 }
