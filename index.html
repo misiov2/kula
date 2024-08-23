@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="menuContainer" class="collapsed">
+    <div id="menuContainer">
+        <button id="menuToggle">&#9654;</button>
         <div id="menuContent">
             <label for="ballColor">Ball Color:</label><br>
             <input type="color" id="ballColor" value="#ff0000"><br>
@@ -23,7 +24,6 @@
             <button id="clearButton">Clear Balls</button><br><br>
             <button id="backgroundButton">Change Background</button>
         </div>
-        <div id="menuToggle">&#9654;</div>
     </div>
     <div id="stats" style="display: none;">
         Bounce Count: <span id="bounceCount">0</span><br>
