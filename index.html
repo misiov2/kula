@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Menu and Bouncing Balls</title>
+    <title>Interactive Ball Animation</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="menuContainer" class="collapsed">
+        <div id="menuToggle"></div>
         <div id="menu">
             <label for="ballColor">Ball Color:</label><br>
             <input type="color" id="ballColor" value="#ff0000"><br>
@@ -23,7 +24,6 @@
             <button id="clearButton" onclick="clearBalls()">Clear Balls</button><br><br>
             <button id="backgroundButton" onclick="changeBackground()">Change Background</button>
         </div>
-        <div id="menuToggle" onclick="toggleMenu()">&#9654;</div>
     </div>
     <div id="stats" style="display: none;">
         Bounce Count: <span id="bounceCount">0</span><br>
