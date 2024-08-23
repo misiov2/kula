@@ -7,6 +7,11 @@ body, html {
     background-color: white;
 }
 
+.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+
 @font-face {
     font-family: 'Quicksand';
     src: url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
@@ -29,6 +34,11 @@ body, html {
     margin: 0;
 }
 
+.dark-mode #content h1 {
+    color: rgba(255, 255, 255, 0.1);
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
+}
+
 .ball {
     width: 50px;
     height: 50px;
@@ -45,12 +55,19 @@ body, html {
     border-radius: 5px;
 }
 
-#menu input[type="number"],
-#menu input[type="color"],
-#menu input[type="file"],
-#menu select {
+.dark-mode #menu {
+    background-color: rgba(18, 18, 18, 0.8);
+    color: white;
+}
+
+#menu input[type="number"], #menu input[type="color"], #menu input[type="file"], #menu select {
     margin-bottom: 5px;
     width: 100%;
+}
+
+#menu button {
+    width: 100%;
+    margin-top: 5px;
 }
 
 #helpBox {
@@ -73,3 +90,8 @@ body, html {
     font-family: 'Quicksand', sans-serif;
     font-size: 16px;
     color: rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode #stats {
+    color: rgba(255, 255, 255, 0.5);
+}
