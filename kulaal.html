@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animated Ball with Gravity</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        background-color: white;
+    }
+    @font-face {
+        font-family: 'Quicksand';
+        src: url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+    }
+    #content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        font-family: 'Quicksand', sans-serif;
+    }
+    #content h1 {
+        font-size: 48px;
+        color: rgba(0, 0, 0, 0.1);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        filter: blur(2px);
+        margin: 0;
+    }
+    .ball {
+        width: 50px;
+        height: 50px;
+        background-color: red;
+        border-radius: 50%;
+        position: absolute;
+    }
+    #menu {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 5px;
+    }
+    #menu input[type="number"] {
+        margin-bottom: 5px;
+    }
+    #helpBox {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 20px;
+        height: 20px;
+        background-color: #000;
+        color: #fff;
+        text-align: center;
+        line-height: 20px;
+        cursor: pointer;
+    }
+    #stats {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-family: 'Quicksand', sans-serif;
+        font-size: 16px;
+        color: rgba(0, 0, 0, 0.5);
+    }
+</style>
+</head>
+<body>
+<div id="content">
+    <h1>MISIEK</h1>
+</div>
+<div id="menu" style="display: none;">
+    <label for="ballSize">Ball Size:</label><br>
+    <input type="number" id="ballSize" value="50"><br>
+    <label for="ballSpeed">Ball Speed:</label><br>
+    <input type="number" id="ballSpeed" value="2"><br>
+    <button onclick="addBall()">Add Ball</button><br><br>
+    <label for="statsToggle">Show Stats:</label><br>
+    <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
+</div>
+<div id="helpBox" onclick="toggleMenu()">?</div>
+<div id="stats" style="display: none;">Bounce Count: <span id="bounceCount">0</span></div>
+
+<script>
+    let balls = [];
+    let gravity = 0.2;
+    let boostCounter = 0;
+    const boostAmount = 10; // Wielkość boosta
+    let statsVisible = false;
+    let bounceCounter = 0;
+
+    function addBall() {
+        let size = document.getElementById("ballSize").value;
+        let speed = document.getElementById("ballSpeed").value;
+        createBall(size, speed);
+    }
+
+    function createBall(size, speed) {
+        let ball = document.createElement("div");
+        ball.className = "ball";
+        ball.style.width = size + "px";
+        ball.style.height = size + "px";
+        ball.style.borderRadius = "50%";
+        ball.style.backgroundColor = getRandomColor();
+        ball.style.position = "absolute";
+        ball.style.left = Math.random() * (window.innerWidth - size) + "px";
+        ball.style.top = Math.random() * (window.innerHeight - size) + "px";
+        document.body.appendChild(ball);
+        balls.push({ element: ball, speedX: Math.random() * 10 - 5, speedY: parseFloat(speed), bounceCount: 0 });
+    }
+
+    function getRandomColor() {
+        return '#' + Math.floor(Math.random()*16777215).toString(16);
+    }
+
+    function update() {
+        for (let i = 0; i < balls.length; i++) {
+            let ballA = balls[i];
+            let currentTopA = parseFloat(ballA.element.style.top);
+            let currentLeftA = parseFloat(ballA.element.style.left);
+            let sizeA = parseFloat(ballA.element.style.height);
+
+            for (let j = i + 1; j < balls.length; j++) {
+                let ballB = balls[j];
+                let currentTopB = parseFloat(ballB.element.style.top);
+                let currentLeftB = parseFloat(ballB.element.style.left);
+                let sizeB = parseFloat(ballB.element.style.height);
+
+                let dx = currentLeftB - currentLeftA;
+                let dy = currentTopB - currentTopA;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let minDistance = sizeA / 2 + sizeB / 2;
+
+                if (distance < minDistance) {
+                    // Kiedy kulki się zderzają, odpychają się od siebie
+                    let angle = Math.atan2(dy, dx);
+                    let targetX = currentLeftA + Math.cos(angle) * minDistance;
+                    let targetY = currentTopA + Math.sin(angle) * minDistance;
+
+                    let ax = (targetX - currentLeftA) * 0.1;
+                    let ay = (targetY - currentTopA) * 0.1;
+
+                    ballA.speedX -= ax;
+                    ballA.speedY -= ay;
+                    ballB.speedX += ax;
+                    ballB.speedY += ay;
+                }
+            }
+
+            if (currentTopA >= window.innerHeight - sizeA) {
+                ballA.speedY *= -0.9; // Opór powietrza
+                ballA.bounceCount++;
+                bounceCounter++;
+                if (ballA.bounceCount % 10 === 0) {
+                    ballA.speedY -= boostAmount;
+                }
+            } else if (currentTopA <= 0) {
+                ballA.speedY *= -1;
+            } else {
+                ballA.speedY += gravity;
+            }
+
+            if (currentLeftA <= 0 || currentLeftA >= window.innerWidth - sizeA) {
+                ballA.speedX *= -1;
+            }
+
+            ballA.element.style.top = Math.min(Math.max(currentTopA + ballA.speedY, 0), window.innerHeight - sizeA) + "px";
+            ballA.element.style.left = Math.min(Math.max(currentLeftA + ballA.speedX, 0), window.innerWidth - sizeA) + "px";
+        }
+
+        document.getElementById("bounceCount").innerText = bounceCounter;
+
+        requestAnimationFrame(update);
+    }
+
+    function toggleMenu() {
+        let menu = document.getElementById("menu");
+        menu.style.display = menu.style.display === "none" ? "block" : "none";
+    }
+
+    function toggleStats() {
+        statsVisible = !statsVisible;
+        let stats = document.getElementById("stats");
+        stats.style.display = statsVisible ? "block" : "none";
+    }
+
+    update();
+</script>
+</body>
+</html>
