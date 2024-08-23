@@ -48,7 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 let dx = currentLeftB - currentLeftA;
                 let dy = currentTopB - currentTopA;
                 let distance = Math.sqrt(dx * dx + dy * dy);
-                let minDistance = sizeA / 2 + sizeB / 2; if (distance < minDistance) {
+                let minDistance = sizeA / 2 + sizeB / 2; 
+                if (distance < minDistance) {
                     let angle = Math.atan2(dy, dx);
                     let targetX = currentLeftA + Math.cos(angle) * minDistance;
                     let targetY = currentTopA + Math.sin(angle) * minDistance;
@@ -80,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ballA.element.style.left = currentLeftA + ballA.speedX + 'px';
             ballA.element.style.top = currentTopA + ballA.speedY + 'px';
 
+            // Odbicie od krawędzi ekranu
             if (currentLeftA <= 0 || currentLeftA + sizeA >= window.innerWidth) {
                 ballA.speedX *= -1;
             }
