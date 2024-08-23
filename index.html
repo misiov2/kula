@@ -28,6 +28,9 @@
             <option value="165">165 FPS</option>
             <option value="0">Unlimited</option>
         </select><br><br>
+        <button onclick="clearBalls()">Clear</button><br><br>
+        <label for="darkModeToggle">Dark Mode:</label><br>
+        <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()"><br><br>
         <label for="statsToggle">Show Stats:</label><br>
         <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
     </div>
@@ -150,6 +153,17 @@
         function toggleStats() {
             let stats = document.getElementById("stats");
             stats.style.display = stats.style.display === "none" ? "block" : "none";
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        function clearBalls() {
+            balls.forEach(ball => ball.element.remove());
+            balls = [];
+            bounceCounter = 0;
+            document.getElementById("bounceCount").innerText = bounceCounter;
         }
 
         update();
