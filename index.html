@@ -33,12 +33,15 @@
         <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()"><br><br>
         <label for="statsToggle">Show Stats:</label><br>
         <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
+        <label for="trailToggle">Show Trails:</label><br>
+        <input type="checkbox" id="trailToggle" onchange="toggleTrails()"><br><br>
     </div>
     <div id="helpBox" onclick="toggleMenu()">?</div>
     <div id="stats" style="display: none;">Bounce Count: <span id="bounceCount">0</span></div>
 
     <script>
         let balls = [];
+        let trailsEnabled = false;
         let gravity = 0.2;
         let fps = 60;
         let interval = 1000 / fps;
@@ -75,7 +78,26 @@
             }
 
             document.body.appendChild(ball);
-            balls.push({ element: ball, speedX: Math.random() * 10 - 5, speedY: parseFloat(speed), bounceCount: 0 });
+
+            let trail = null;
+            if (trailsEnabled) {
+                trail = document.createElement("div");
+                trail.className = "trail";
+                trail.style.width = size + "px";
+                trail.style.height = size + "px";
+                trail.style.backgroundColor = color;
+                trail.style.position = "absolute";
+                trail.style.zIndex = "-1"; // Ensure trails are behind balls
+                document.body.appendChild(trail);
+            }
+
+            balls.push({ 
+                element: ball, 
+                trail: trail,
+                speedX: Math.random() * 10 - 5, 
+                speedY: parseFloat(speed), 
+                bounceCount: 0 
+            });
         }
 
         function update(time) {
@@ -86,6 +108,11 @@
                     let currentTopA = parseFloat(ballA.element.style.top);
                     let currentLeftA = parseFloat(ballA.element.style.left);
                     let sizeA = parseFloat(ballA.element.style.height);
+
+                    if (ballA.trail) {
+                        ballA.trail.style.left = currentLeftA + "px";
+                        ballA.trail.style.top = currentTopA + "px";
+                    }
 
                     for (let j = i + 1; j < balls.length; j++) {
                         let ballB = balls[j];
@@ -166,8 +193,35 @@
             document.body.classList.toggle("dark-mode", darkMode);
         }
 
+        function toggleTrails() {
+            trailsEnabled = !trailsEnabled;
+            let allTrails = document.querySelectorAll(".trail");
+            allTrails.forEach(trail => trail.remove());
+            balls.forEach(ball => {
+                if (trailsEnabled && !ball.trail) {
+                    let trail = document.createElement("div");
+                    trail.className = "trail";
+                    trail.style.width = ball.element.style.width;
+                    trail.style.height = ball.element.style.height;
+                    trail.style.backgroundColor = ball.element.style.backgroundColor;
+                    trail.style.position = "absolute";
+                    trail.style.zIndex = "-1";
+                    document.body.appendChild(trail);
+                    ball.trail = trail;
+                } else if (!trailsEnabled && ball.trail) {
+                    ball.trail.remove();
+                    ball.trail = null;
+                }
+            });
+        }
+
         function clearBalls() {
-            balls.forEach(ball => ball.element.remove());
+            balls.forEach(ball => {
+                ball.element.remove();
+                if (ball.trail) {
+                    ball.trail.remove();
+                }
+            });
             balls = [];
             bounceCounter = 0;
             document.getElementById("bounceCount").innerText = bounceCounter;
