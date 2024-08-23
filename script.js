@@ -203,3 +203,4 @@ document.addEventListener('touchmove', dragMoveTouch);
 document.addEventListener('touchend', endDragTouch);
 
 update();
+
