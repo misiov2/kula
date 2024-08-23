@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('menuToggle');
-    const menuContainer = document.getElementById('menuContainer');
     const addBallButton = document.getElementById('addBallButton');
     const statsToggle = document.getElementById('statsToggle');
     const statsDiv = document.getElementById('stats');
@@ -45,15 +44,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = 0; i < balls.length; i++) {
             const ballA = balls[i];
-            const currentLeftA = parseInt(ballA.element.style.left);
-            const currentTopA = parseInt(ballA.element.style.top);
+            const currentLeftA = parseFloat(ballA.element.style.left);
+            const currentTopA = parseFloat(ballA.element.style.top);
             const sizeA = ballA.size;
 
             // Sprawdzenie kolizji z innymi kulkami
             for (let j = i + 1; j < balls.length; j++) {
                 const ballB = balls[j];
-                const currentLeftB = parseInt(ballB.element.style.left);
-                const currentTopB = parseInt(ballB.element.style.top);
+                const currentLeftB = parseFloat(ballB.element.style.left);
+                const currentTopB = parseFloat(ballB.element.style.top);
                 const sizeB = ballB.size;
 
                 const dx = currentLeftB - currentLeftA;
@@ -67,10 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const overlap = minDistance - distance;
 
                     // Przesunięcie kulek
-                    ballA.element.style.left = currentLeftA - Math.cos(angle) * (overlap / 2) + 'px';
-                    ballA.element.style.top = currentTopA - Math.sin(angle) * (overlap / 2) + 'px';
-                    ballB.element.style.left = currentLeftB + Math.cos(angle) * (overlap / 2) + 'px';
-                    ballB.element.style.top = currentTopB + Math.sin(angle) * (overlap / 2) + 'px';
+                    ballA.element.style.left = (currentLeftA - Math.cos(angle) * (overlap / 2)) + 'px';
+                    ballA.element.style.top = (currentTopA - Math.sin(angle) * (overlap / 2)) + 'px';
+                    ballB.element.style.left = (currentLeftB + Math.cos(angle) * (overlap / 2)) + 'px';
+                    ballB.element.style.top = (currentTopB + Math.sin(angle) * (overlap / 2)) + 'px';
 
                     // Obliczanie nowych prędkości po kolizji
                     const normalX = dx / distance;
@@ -106,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Aktualizacja pozycji kulki
-            ballA.element.style.left = currentLeftA + ballA.speedX + 'px';
-            ballA.element.style.top = currentTopA + ballA.speedY + 'px';
+            ballA.element.style.left = (currentLeftA + ballA.speedX) + 'px';
+            ballA.element.style.top = (currentTopA + ballA.speedY) + 'px';
 
             // Odwrócenie kierunku ruchu po uderzeniu w krawędź ekranu
             if (currentLeftA <= 0 || currentLeftA + sizeA >= window.innerWidth) {
