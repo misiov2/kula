@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animowana Piłka z Grawitacją</title>
+    <title>Animowana Piłka z Grawitacją - Multiplayer</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,17 +11,18 @@
         <h1 id="title">MISIEK</h1>
     </div>
     <div id="menu" style="display: none;">
+        <!-- Nowe pola do tworzenia/dołączania do pokoju -->
+        <label for="roomName">Nazwa Pokoju:</label><br>
+        <input type="text" id="roomName" placeholder="Wpisz nazwę pokoju"><br>
+        <button onclick="createRoom()">Stwórz Pokój</button>
+        <button onclick="joinRoom()">Dołącz do Pokoju</button><br><br>
+
         <label for="ballSize">Rozmiar Piłki:</label><br>
         <input type="number" id="ballSize" value="50"><br>
         <label for="ballSpeed">Prędkość Piłki:</label><br>
         <input type="number" id="ballSpeed" value="2"><br>
+        <button onclick="addBall()">Dodaj Piłkę</button><br><br>
 
-        <label for="colorPicker">Wybierz Kolor:</label><br>
-        <input type="color" id="colorPicker" value="#ff0000"><br>
-        
-        <label for="imageUpload">Wybierz Obrazek:</label><br>
-        <input type="file" id="imageUpload" accept="image/*"><br><br>
-        
         <label for="fpsSelect">Wybierz FPS:</label><br>
         <select id="fpsSelect">
             <option value="30">30 FPS</option>
@@ -31,14 +32,16 @@
             <option value="0">Nielimitowane FPS</option>
         </select><br><br>
 
-        <button onclick="addBall()">Dodaj Piłkę</button><br><br>
         <label for="statsToggle">Pokaż Statystyki:</label><br>
         <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
     </div>
     <div id="helpBox" onclick="toggleMenu()">?</div>
     <div id="stats" style="display: none;">Liczba Odbić: <span id="bounceCount">0</span></div>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script>
+        const socket = io();
+
         let balls = [];
         let gravity = 0.2;
         let boostAmount = 10;
@@ -50,39 +53,57 @@
         let interval = 1000 / fps;
         let lastTime = 0;
         let unlimitedFPS = false;
+        let currentRoom = '';
 
-        function addBall() {
-            let size = document.getElementById("ballSize").value;
-            let speed = document.getElementById("ballSpeed").value;
-            createBall(size, speed);
+        function createRoom() {
+            const roomName = document.getElementById('roomName').value;
+            socket.emit('createRoom', roomName);
+            currentRoom = roomName;
         }
 
-        function createBall(size, speed) {
+        function joinRoom() {
+            const roomName = document.getElementById('roomName').value;
+            socket.emit('joinRoom', roomName);
+            currentRoom = roomName;
+        }
+
+        function addBall() {
+            const size = document.getElementById("ballSize").value;
+            const speed = document.getElementById("ballSpeed").value;
+            const ballData = { size, speed, color: selectedColor, image: selectedImage };
+            socket.emit('addBall', { roomName: currentRoom, ballData });
+            createBall(ballData);
+        }
+
+        function createBall(ballData) {
             let ball = document.createElement("div");
             ball.className = "ball";
-            ball.style.width = size + "px";
-            ball.style.height = size + "px";
+            ball.style.width = ballData.size + "px";
+            ball.style.height = ballData.size + "px";
             ball.style.borderRadius = "50%";
-            if (selectedImage) {
-                ball.style.backgroundImage = `url(${selectedImage})`;
+            if (ballData.image) {
+                ball.style.backgroundImage = `url(${ballData.image})`;
                 ball.style.backgroundSize = "cover";
                 ball.style.backgroundColor = 'transparent'; 
             } else {
-                ball.style.backgroundColor = selectedColor;
-                ball.style.backgroundImage = 'none';
+                ball.style.backgroundColor = ballData.color;
             }
             ball.style.position = "absolute";
-            ball.style.left = Math.random() * (window.innerWidth - size) + "px";
-            ball.style.top = Math.random() * (window.innerHeight - size) + "px";
+            ball.style.left = Math.random() * (window.innerWidth - ballData.size) + "px";
+            ball.style.top = Math.random() * (window.innerHeight - ballData.size) + "px";
             document.body.appendChild(ball);
             balls.push({
                 element: ball,
-                size: size,
+                size: ballData.size,
                 speedX: Math.random() * 10 - 5,
-                speedY: parseFloat(speed),
+                speedY: parseFloat(ballData.speed),
                 bounceCount: 0
             });
         }
+
+        socket.on('newBall', (ballData) => {
+            createBall(ballData);
+        });
 
         function update(time) {
             if (unlimitedFPS || time - lastTime >= interval) {
@@ -146,38 +167,13 @@
             requestAnimationFrame(update);
         }
 
-        function toggleMenu() {
-            let menu = document.getElementById("menu");
-            menu.style.display = menu.style.display === "none" ? "block" : "none";
-        }
-
-        function toggleStats() {
-            statsVisible = !statsVisible;
-            let stats = document.getElementById("stats");
-            stats.style.display = statsVisible ? "block" : "none";
-        }
-
-        document.getElementById("colorPicker").addEventListener("input", function() {
-            selectedColor = this.value;
-        });
-
-        document.getElementById("imageUpload").addEventListener("change", function(event) {
-            let file = event.target.files[0];
-            if (file) {
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    selectedImage = e.target.result;
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-
-        document.getElementById("fpsSelect").addEventListener("change", function() {
-            fps = parseInt(this.value, 10);
-            if (fps === 0) {
+        document.getElementById('fpsSelect').addEventListener('change', (event) => {
+            const selectedValue = parseInt(event.target.value);
+            if (selectedValue === 0) {
                 unlimitedFPS = true;
             } else {
                 unlimitedFPS = false;
+                fps = selectedValue;
                 interval = 1000 / fps;
             }
         });
