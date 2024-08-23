@@ -2,13 +2,13 @@ document.addEventListener("DOMContentLoaded", function() {
     // Toggle menu visibility
     function toggleMenu() {
         let menuContainer = document.getElementById("menuContainer");
-        menuContainer.classList.toggle("collapsed");
+        menuContainer.classList.toggle("expanded");
 
         let toggle = document.getElementById("menuToggle");
-        if (menuContainer.classList.contains("collapsed")) {
-            toggle.innerHTML = "&#9654;"; // Strzałka w prawo
-        } else {
+        if (menuContainer.classList.contains("expanded")) {
             toggle.innerHTML = "&#9664;"; // Strzałka w lewo
+        } else {
+            toggle.innerHTML = "&#9654;"; // Strzałka w prawo
         }
     }
 
