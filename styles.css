@@ -4,7 +4,7 @@ body, html {
     height: 100%;
     overflow: hidden;
     position: relative;
-    background-color: #87CEEB;
+    background-color: white; /* Zmieniono na białe tło */
 }
 
 #menuContainer {
@@ -27,13 +27,13 @@ body, html {
 }
 
 #menuToggle {
-    width: 20px;
-    height: 20px;
+    width: 30px; /* Zwiększono rozmiar dla lepszej widoczności */
+    height: 30px; /* Zwiększono rozmiar dla lepszej widoczności */
     background-color: black;
     border-radius: 50%;
     position: absolute;
-    top: -30px;
-    left: -30px;
+    top: -15px; /* Wyśrodkowanie kółka względem menu */
+    left: -15px; /* Wyśrodkowanie kółka względem menu */
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
