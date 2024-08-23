@@ -149,9 +149,8 @@
                             const relativeVelocityY = ballB.speedY - ballA.speedY;
                             const dotProduct = (relativeVelocityX * normalX) + (relativeVelocityY * normalY);
 
-                            const coefficient = (ballA.bounceCount % 5 === 0) ? -0.5 : -1;
-
                             if (dotProduct > 0) {
+                                const coefficient = (ballA.bounceCount % 5 === 0) ? -0.5 : -1;
                                 ballA.speedX += coefficient * dotProduct * normalX;
                                 ballA.speedY += coefficient * dotProduct * normalY;
                                 ballB.speedX -= coefficient * dotProduct * normalX;
@@ -162,6 +161,15 @@
 
                                 bounceCounter++;
                                 document.getElementById('bounceCount').innerText = bounceCounter;
+
+                                // Wybijanie kulek do góry co 5 odbić
+                                if (ballA.bounceCount % 5 === 0) {
+                                    ballA.speedY = -Math.abs(ballA.speedY); // Skierowanie kulki w górę
+                                }
+
+                                if (ballB.bounceCount % 5 === 0) {
+                                    ballB.speedY = -Math.abs(ballB.speedY); // Skierowanie kulki w górę
+                                }
                             }
                         }
                     }
