@@ -1,108 +1,67 @@
+/* Globalne style */
 body, html {
     margin: 0;
     padding: 0;
     height: 100%;
     overflow: hidden;
-    background-color: #ffffff; /* Białe tło */
+    background-color: #fff;
     font-family: Arial, sans-serif;
 }
 
+/* Menu kontener */
 #menuContainer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 250px;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 0 10px 10px 0;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 300px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease;
+    transform-origin: left;
     z-index: 1000;
 }
 
-#menuContent {
-    padding: 20px;
-    height: 100%;
-    box-sizing: border-box;
-}
-
+/* Przycisk menu */
 #menuToggle {
-    width: 50px;
-    height: 50px;
-    background-color: black;
-    color: white;
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    font-size: 20px;
     cursor: pointer;
     position: absolute;
     top: 10px;
-    left: 10px;
+    right: -50px;
     z-index: 1001;
-    transition: background-color 0.3s, transform 0.3s;
+    font-size: 24px;
 }
 
-#menuToggle:hover {
-    background-color: #333;
+/* Menu zawartość */
+#menuContent {
+    padding: 20px;
 }
 
-#menuToggle:active {
-    transform: scale(0.9);
-}
-
-#menuContainer.expanded {
-    transform: translateX(0);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
+/* Statystyki */
 #stats {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: rgba(255, 255, 255, 0.9);
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-/* Styl kulki */
+/* Piłki */
 .ball {
-    position: absolute;
-    border-radius: 50%;
+    width: 50px;
+    height: 50px;
     background-color: red;
-    pointer-events: none;
-    /* Dodaj transformację dla kulki */
-    transition: transform 0.1s;
-}
-
-/* Responsywność */
-@media (max-width: 768px) {
-    #menuContainer {
-        width: 200px;
-    }
-
-    #menuToggle {
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
-        top: 5px;
-        left: 5px;
-    }
-}
-
-@media (max-width: 480px) {
-    #menuContainer {
-        width: 150px;
-    }
-
-    #menuToggle {
-        width: 35px;
-        height: 35px;
-        font-size: 16px;
-        top: 5px;
-        left: 5px;
-    }
+    border-radius: 50%;
+    position: absolute;
 }
