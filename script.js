@@ -122,4 +122,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Initialize
     update();
+
+    // Expose functions for menu
+    window.addBall = addBall;
+    window.clearBalls = clearBalls;
+    window.changeBackground = changeBackground;
+    window.toggleStats = toggleStats;
+    window.updateBlur = updateBlur;
 });
