@@ -1,33 +1,23 @@
-let shakeEnabled = false;
-let shakeThreshold = 15; // Próg w celu wykrywania potrząsania
+// Function to toggle the visibility of the menu
+function toggleMenu() {
+    let menu = document.getElementById("menu");
+    menu.style.display = menu.style.display === "none" ? "block" : "none";
+}
 
-function toggleShake() {
-    shakeEnabled = !shakeEnabled;
-    if (shakeEnabled) {
-        window.addEventListener('devicemotion', handleShake);
+// Your other JavaScript functions go here...
+
+// Initialize the FPS and update functions, as well as event listeners
+document.getElementById('fpsSelect').addEventListener('change', (event) => {
+    const selectedValue = parseInt(event.target.value);
+    if (selectedValue === 0) {
+        unlimitedFPS = true;
     } else {
-        window.removeEventListener('devicemotion', handleShake);
+        unlimitedFPS = false;
+        fps = selectedValue;
+        interval = 1000 / fps;
     }
-}
+});
 
-function handleShake(event) {
-    let acceleration = event.accelerationIncludingGravity;
-    let ax = acceleration.x;
-    let ay = acceleration.y;
-    let az = acceleration.z;
-    
-    let totalAcceleration = Math.sqrt(ax * ax + ay * ay + az * az);
-    
-    if (totalAcceleration > shakeThreshold) {
-        balls.forEach(ball => {
-            // Apply a random force to the ball
-            ball.speedX += (Math.random() - 0.5) * 10;
-            ball.speedY += (Math.random() - 0.5) * 10;
-        });
-    }
-}
-
-// Update the function to include shaking
 function update(time) {
     if (unlimitedFPS || time - lastTime >= interval) {
         lastTime = time;
@@ -94,3 +84,6 @@ function update(time) {
 
     requestAnimationFrame(update);
 }
+
+// Start the animation loop
+requestAnimationFrame(update);
