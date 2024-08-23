@@ -15,13 +15,21 @@
         <input type="number" id="ballSize" value="50"><br>
         <label for="ballSpeed">Prędkość Piłki:</label><br>
         <input type="number" id="ballSpeed" value="2"><br>
-        
+
         <label for="colorPicker">Wybierz Kolor:</label><br>
         <input type="color" id="colorPicker" value="#ff0000"><br>
         
         <label for="imageUpload">Wybierz Obrazek:</label><br>
         <input type="file" id="imageUpload" accept="image/*"><br><br>
         
+        <label for="fpsSelect">Wybierz FPS:</label><br>
+        <select id="fpsSelect">
+            <option value="30">30 FPS</option>
+            <option value="60" selected>60 FPS</option>
+            <option value="120">120 FPS</option>
+            <option value="165">165 FPS</option>
+        </select><br><br>
+
         <button onclick="addBall()">Dodaj Piłkę</button><br><br>
         <label for="statsToggle">Pokaż Statystyki:</label><br>
         <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
@@ -37,6 +45,9 @@
         let bounceCounter = 0;
         let selectedImage = null;
         let selectedColor = '#ff0000';
+        let fps = 60;
+        let interval = 1000 / fps;
+        let lastTime = 0;
 
         function addBall() {
             let size = document.getElementById("ballSize").value;
@@ -71,61 +82,64 @@
             });
         }
 
-        function update() {
-            for (let i = 0; i < balls.length; i++) {
-                let ballA = balls[i];
-                let currentTopA = parseFloat(ballA.element.style.top);
-                let currentLeftA = parseFloat(ballA.element.style.left);
-                let sizeA = parseFloat(ballA.size);
+        function update(time) {
+            if (time - lastTime >= interval) {
+                lastTime = time;
+                for (let i = 0; i < balls.length; i++) {
+                    let ballA = balls[i];
+                    let currentTopA = parseFloat(ballA.element.style.top);
+                    let currentLeftA = parseFloat(ballA.element.style.left);
+                    let sizeA = parseFloat(ballA.size);
 
-                for (let j = i + 1; j < balls.length; j++) {
-                    let ballB = balls[j];
-                    let currentTopB = parseFloat(ballB.element.style.top);
-                    let currentLeftB = parseFloat(ballB.element.style.left);
-                    let sizeB = parseFloat(ballB.size);
+                    for (let j = i + 1; j < balls.length; j++) {
+                        let ballB = balls[j];
+                        let currentTopB = parseFloat(ballB.element.style.top);
+                        let currentLeftB = parseFloat(ballB.element.style.left);
+                        let sizeB = parseFloat(ballB.size);
 
-                    let dx = currentLeftB - currentLeftA;
-                    let dy = currentTopB - currentTopA;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    let minDistance = sizeA / 2 + sizeB / 2;
+                        let dx = currentLeftB - currentLeftA;
+                        let dy = currentTopB - currentTopA;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        let minDistance = sizeA / 2 + sizeB / 2;
 
-                    if (distance < minDistance) {
-                        let angle = Math.atan2(dy, dx);
-                        let targetX = currentLeftA + Math.cos(angle) * minDistance;
-                        let targetY = currentTopA + Math.sin(angle) * minDistance;
+                        if (distance < minDistance) {
+                            let angle = Math.atan2(dy, dx);
+                            let targetX = currentLeftA + Math.cos(angle) * minDistance;
+                            let targetY = currentTopA + Math.sin(angle) * minDistance;
 
-                        let ax = (targetX - currentLeftA) * 0.1;
-                        let ay = (targetY - currentTopA) * 0.1;
+                            let ax = (targetX - currentLeftA) * 0.1;
+                            let ay = (targetY - currentTopA) * 0.1;
 
-                        ballA.speedX -= ax;
-                        ballA.speedY -= ay;
-                        ballB.speedX += ax;
-                        ballB.speedY += ay;
+                            ballA.speedX -= ax;
+                            ballA.speedY -= ay;
+                            ballB.speedX += ax;
+                            ballB.speedY += ay;
+                        }
                     }
-                }
 
-                if (currentTopA >= window.innerHeight - sizeA) {
-                    ballA.speedY *= -0.9;
-                    ballA.bounceCount++;
-                    bounceCounter++;
-                    if (ballA.bounceCount % 10 === 0) {
-                        ballA.speedY -= boostAmount;
+                    if (currentTopA >= window.innerHeight - sizeA) {
+                        ballA.speedY *= -0.9;
+                        ballA.bounceCount++;
+                        bounceCounter++;
+                        if (ballA.bounceCount % 10 === 0) {
+                            ballA.speedY -= boostAmount;
+                        }
+                    } else if (currentTopA <= 0) {
+                        ballA.speedY *= -1;
+                    } else {
+                        ballA.speedY += gravity;
                     }
-                } else if (currentTopA <= 0) {
-                    ballA.speedY *= -1;
-                } else {
-                    ballA.speedY += gravity;
+
+                    if (currentLeftA <= 0 || currentLeftA >= window.innerWidth - sizeA) {
+                        ballA.speedX *= -1;
+                    }
+
+                    ballA.element.style.top = Math.min(Math.max(currentTopA + ballA.speedY, 0), window.innerHeight - sizeA) + "px";
+                    ballA.element.style.left = Math.min(Math.max(currentLeftA + ballA.speedX, 0), window.innerWidth - sizeA) + "px";
                 }
 
-                if (currentLeftA <= 0 || currentLeftA >= window.innerWidth - sizeA) {
-                    ballA.speedX *= -1;
-                }
-
-                ballA.element.style.top = Math.min(Math.max(currentTopA + ballA.speedY, 0), window.innerHeight - sizeA) + "px";
-                ballA.element.style.left = Math.min(Math.max(currentLeftA + ballA.speedX, 0), window.innerWidth - sizeA) + "px";
+                document.getElementById("bounceCount").innerText = bounceCounter;
             }
-
-            document.getElementById("bounceCount").innerText = bounceCounter;
 
             requestAnimationFrame(update);
         }
@@ -156,8 +170,12 @@
             }
         });
 
+        document.getElementById("fpsSelect").addEventListener("change", function() {
+            fps = parseInt(this.value, 10);
+            interval = 1000 / fps;
+        });
+
         update();
     </script>
 </body>
 </html>
-
