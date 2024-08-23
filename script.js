@@ -1,13 +1,12 @@
 let balls = [];
 let gravity = 0.2;
-let boostCounter = 0;
 const boostAmount = 10;
 let statsVisible = false;
 let bounceCounter = 0;
 let isDragging = false;
 let offset = { x: 0, y: 0 };
 
-// Add ball to the screen
+// Add a ball to the screen
 function addBall() {
     let size = document.getElementById("ballSize").value;
     let speed = document.getElementById("ballSpeed").value;
@@ -29,12 +28,12 @@ function createBall(size, speed, color) {
     updateBallCount();
 }
 
-// Update ball count display
+// Update the ball count display
 function updateBallCount() {
     document.getElementById("ballCount").innerText = balls.length;
 }
 
-// Get a random color for background
+// Get a random color for the background
 function getRandomColor() {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
@@ -99,7 +98,7 @@ function update() {
     requestAnimationFrame(update);
 }
 
-// Toggle menu visibility
+// Toggle the menu visibility
 function toggleMenu() {
     let menuContainer = document.getElementById("menuContainer");
     let toggle = document.getElementById("menuToggle");
@@ -115,14 +114,14 @@ function toggleMenu() {
     }
 }
 
-// Toggle stats visibility
+// Toggle the stats visibility
 function toggleStats() {
     statsVisible = !statsVisible;
     let stats = document.getElementById("stats");
     stats.style.display = statsVisible ? "block" : "none";
 }
 
-// Update motion blur of balls
+// Update the motion blur of the balls
 function updateBlur() {
     let blurValue = document.getElementById("blurAmount").value;
     document.querySelectorAll(".ball").forEach(ball => {
@@ -141,7 +140,7 @@ function clearBalls() {
     document.getElementById("bounceCount").innerText = bounceCounter;
 }
 
-// Change background color of the body
+// Change the background color of the body
 function changeBackground() {
     document.body.style.backgroundColor = getRandomColor();
 }
@@ -150,23 +149,57 @@ function changeBackground() {
 const menuContainer = document.getElementById("menuContainer");
 const menuToggle = document.getElementById("menuToggle");
 
-menuToggle.addEventListener('mousedown', function (e) {
+let isDragging = false;
+let offset = { x: 0, y: 0 };
+
+function startDrag(e) {
     isDragging = true;
-    offset.x = e.clientX - menuContainer.offsetLeft;
-    offset.y = e.clientY - menuContainer.offsetTop;
+    offset.x = e.clientX - menuContainer.getBoundingClientRect().left;
+    offset.y = e.clientY - menuContainer.getBoundingClientRect().top;
     menuContainer.style.cursor = 'grabbing';
-});
+}
 
-document.addEventListener('mousemove', function (e) {
+function dragMove(e) {
     if (isDragging) {
-        menuContainer.style.left = e.clientX - offset.x + 'px';
-        menuContainer.style.top = e.clientY - offset.y + 'px';
+        menuContainer.style.left = (e.clientX - offset.x) + 'px';
+        menuContainer.style.top = (e.clientY - offset.y) + 'px';
     }
-});
+}
 
-document.addEventListener('mouseup', function () {
+function endDrag() {
     isDragging = false;
     menuContainer.style.cursor = 'grab';
-});
+}
+
+// Touch events for dragging on mobile
+function startDragTouch(e) {
+    let touch = e.touches[0];
+    isDragging = true;
+    offset.x = touch.clientX - menuContainer.getBoundingClientRect().left;
+    offset.y = touch.clientY - menuContainer.getBoundingClientRect().top;
+    menuContainer.style.cursor = 'grabbing';
+}
+
+function dragMoveTouch(e) {
+    if (isDragging) {
+        let touch = e.touches[0];
+        menuContainer.style.left = (touch.clientX - offset.x) + 'px';
+        menuContainer.style.top = (touch.clientY - offset.y) + 'px';
+    }
+}
+
+function endDragTouch() {
+    isDragging = false;
+    menuContainer.style.cursor = 'grab';
+}
+
+// Event listeners for dragging
+menuToggle.addEventListener('mousedown', startDrag);
+document.addEventListener('mousemove', dragMove);
+document.addEventListener('mouseup', endDrag);
+
+menuToggle.addEventListener('touchstart', startDragTouch);
+document.addEventListener('touchmove', dragMoveTouch);
+document.addEventListener('touchend', endDragTouch);
 
 update();
