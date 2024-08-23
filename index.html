@@ -3,17 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu z Rozwijaniem</title>
+    <title>Rozwijane Menu</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="content">
-        <!-- Główna zawartość strony -->
-    </div>
-    
     <div id="menuContainer">
-        <div id="menuToggle">&#9654;</div> <!-- Przycisk rozwijania menu -->
-        <iframe id="menuFrame" src="menu.html" frameborder="0"></iframe>
+        <div id="menuContent">
+            <div id="menuToggle">&#9654;</div>
+            <h1>Menu</h1>
+            <label for="ballColor">Ball Color:</label><br>
+            <input type="color" id="ballColor" value="#ff0000"><br>
+            <label for="ballSize">Ball Size:</label><br>
+            <input type="number" id="ballSize" value="50"><br>
+            <label for="ballSpeed">Ball Speed:</label><br>
+            <input type="number" id="ballSpeed" value="2"><br>
+            <button id="addBallButton">Add Ball</button><br><br>
+            <label for="statsToggle">Show Stats:</label>
+            <input type="checkbox" id="statsToggle"><br><br>
+            <label for="blurAmount">Motion Blur:</label>
+            <input type="range" id="blurAmount" min="0" max="10" value="0"><br><br>
+            <button id="clearButton">Clear Balls</button><br><br>
+            <button id="backgroundButton">Change Background</button>
+        </div>
     </div>
 
     <div id="stats" style="display: none;">
