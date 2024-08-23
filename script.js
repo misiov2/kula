@@ -3,45 +3,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('menuToggle');
     const addBallButton = document.getElementById('addBallButton');
     const statsToggle = document.getElementById('statsToggle');
+    const statsDiv = document.getElementById('stats');
     const blurAmount = document.getElementById('blurAmount');
     const clearButton = document.getElementById('clearButton');
     const backgroundButton = document.getElementById('backgroundButton');
-    const statsDiv = document.getElementById('stats');
 
     let balls = [];
     let gravity = 0.2;
     let bounceCounter = 0;
 
-    let isMenuOpen = false;
-
-    menuToggle.addEventListener('click', () => {
-        isMenuOpen = !isMenuOpen;
-        menuContainer.classList.toggle('expanded', isMenuOpen);
-        menuToggle.innerHTML = isMenuOpen ? '&#9664;' : '&#9776;';
-    });
-
-    // Przesuwanie menu
-    let startX, startY, initialLeft, initialTop;
-    menuContainer.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        startY = e.touches[0].clientY;
-        initialLeft = parseFloat(window.getComputedStyle(menuContainer).left);
-        initialTop = parseFloat(window.getComputedStyle(menuContainer).top);
-        menuContainer.style.transition = 'none';
-    });
-
-    menuContainer.addEventListener('touchmove', (e) => {
-        const deltaX = e.touches[0].clientX - startX;
-        const deltaY = e.touches[0].clientY - startY;
-        menuContainer.style.left = `${Math.max(0, Math.min(initialLeft + deltaX, window.innerWidth - menuContainer.offsetWidth))}px`;
-        menuContainer.style.top = `${Math.max(0, Math.min(initialTop + deltaY, window.innerHeight - menuContainer.offsetHeight))}px`;
-    });
-
-    menuContainer.addEventListener('touchend', () => {
-        menuContainer.style.transition = 'transform 0.3s ease';
-    });
-
-    // Funkcje
+    // Funkcja do tworzenia piłek
     function createBall(size, speed, color) {
         let ball = document.createElement('div');
         ball.className = 'ball';
@@ -55,10 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
         updateBallCount();
     }
 
+    // Funkcja do aktualizacji liczby piłek
     function updateBallCount() {
         document.getElementById('ballCount').innerText = balls.length;
     }
 
+    // Funkcja do aktualizacji pozycji piłek
     function update() {
         for (let i = 0; i < balls.length; i++) {
             let ballA = balls[i];
@@ -123,7 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(update);
     }
 
-    update();
+    // Funkcje do obsługi zdarzeń
+    menuToggle.addEventListener('click', () => {
+        menuContainer.classList.toggle('collapsed');
+        menuToggle.innerHTML = menuContainer.classList.contains('collapsed') ? '&#9654;' : '&#9664;';
+    });
 
     addBallButton.addEventListener('click', () => {
         const size = parseInt(document.getElementById('ballSize').value);
@@ -149,4 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
     backgroundButton.addEventListener('click', () => {
         document.body.style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
     });
+
+    update();
 });
