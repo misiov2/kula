@@ -1,109 +1,77 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animowana Piłka z Grawitacją - Multiplayer</title>
+    <title>Animated Balls with Gravity</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="content">
-        <h1 id="title">MISIEK</h1>
+        <h1>MISIEK</h1>
     </div>
-    <div id="menu" style="display: none;">
-        <!-- Nowe pola do tworzenia/dołączania do pokoju -->
-        <label for="roomName">Nazwa Pokoju:</label><br>
-        <input type="text" id="roomName" placeholder="Wpisz nazwę pokoju"><br>
-        <button onclick="createRoom()">Stwórz Pokój</button>
-        <button onclick="joinRoom()">Dołącz do Pokoju</button><br><br>
-
-        <label for="ballSize">Rozmiar Piłki:</label><br>
+    <div id="menu">
+        <label for="ballSize">Ball Size:</label><br>
         <input type="number" id="ballSize" value="50"><br>
-        <label for="ballSpeed">Prędkość Piłki:</label><br>
+        <label for="ballSpeed">Ball Speed:</label><br>
         <input type="number" id="ballSpeed" value="2"><br>
-        <button onclick="addBall()">Dodaj Piłkę</button><br><br>
-
-        <label for="fpsSelect">Wybierz FPS:</label><br>
+        <label for="ballColor">Ball Color:</label><br>
+        <input type="color" id="ballColor" value="#ff0000"><br>
+        <label for="ballImage">Ball Image:</label><br>
+        <input type="file" id="ballImage"><br>
+        <button onclick="addBall()">Add Ball</button><br><br>
+        <label for="fpsSelect">FPS:</label><br>
         <select id="fpsSelect">
             <option value="30">30 FPS</option>
             <option value="60" selected>60 FPS</option>
             <option value="120">120 FPS</option>
             <option value="165">165 FPS</option>
-            <option value="0">Nielimitowane FPS</option>
+            <option value="0">Unlimited</option>
         </select><br><br>
-
-        <label for="statsToggle">Pokaż Statystyki:</label><br>
+        <label for="statsToggle">Show Stats:</label><br>
         <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
     </div>
     <div id="helpBox" onclick="toggleMenu()">?</div>
-    <div id="stats" style="display: none;">Liczba Odbić: <span id="bounceCount">0</span></div>
+    <div id="stats" style="display: none;">Bounce Count: <span id="bounceCount">0</span></div>
 
-    <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
-
         let balls = [];
         let gravity = 0.2;
-        let boostAmount = 10;
-        let statsVisible = false;
-        let bounceCounter = 0;
-        let selectedImage = null;
-        let selectedColor = '#ff0000';
         let fps = 60;
         let interval = 1000 / fps;
         let lastTime = 0;
         let unlimitedFPS = false;
-        let currentRoom = '';
-
-        function createRoom() {
-            const roomName = document.getElementById('roomName').value;
-            socket.emit('createRoom', roomName);
-            currentRoom = roomName;
-        }
-
-        function joinRoom() {
-            const roomName = document.getElementById('roomName').value;
-            socket.emit('joinRoom', roomName);
-            currentRoom = roomName;
-        }
+        let bounceCounter = 0;
 
         function addBall() {
-            const size = document.getElementById("ballSize").value;
-            const speed = document.getElementById("ballSpeed").value;
-            const ballData = { size, speed, color: selectedColor, image: selectedImage };
-            socket.emit('addBall', { roomName: currentRoom, ballData });
-            createBall(ballData);
+            let size = document.getElementById("ballSize").value;
+            let speed = document.getElementById("ballSpeed").value;
+            let color = document.getElementById("ballColor").value;
+            let imageInput = document.getElementById("ballImage");
+            let imageUrl = imageInput.files.length > 0 ? URL.createObjectURL(imageInput.files[0]) : null;
+            createBall(size, speed, color, imageUrl);
         }
 
-        function createBall(ballData) {
+        function createBall(size, speed, color, imageUrl) {
             let ball = document.createElement("div");
             ball.className = "ball";
-            ball.style.width = ballData.size + "px";
-            ball.style.height = ballData.size + "px";
+            ball.style.width = size + "px";
+            ball.style.height = size + "px";
             ball.style.borderRadius = "50%";
-            if (ballData.image) {
-                ball.style.backgroundImage = `url(${ballData.image})`;
-                ball.style.backgroundSize = "cover";
-                ball.style.backgroundColor = 'transparent'; 
-            } else {
-                ball.style.backgroundColor = ballData.color;
-            }
             ball.style.position = "absolute";
-            ball.style.left = Math.random() * (window.innerWidth - ballData.size) + "px";
-            ball.style.top = Math.random() * (window.innerHeight - ballData.size) + "px";
-            document.body.appendChild(ball);
-            balls.push({
-                element: ball,
-                size: ballData.size,
-                speedX: Math.random() * 10 - 5,
-                speedY: parseFloat(ballData.speed),
-                bounceCount: 0
-            });
-        }
+            ball.style.left = Math.random() * (window.innerWidth - size) + "px";
+            ball.style.top = Math.random() * (window.innerHeight - size) + "px";
 
-        socket.on('newBall', (ballData) => {
-            createBall(ballData);
-        });
+            if (imageUrl) {
+                ball.style.backgroundImage = `url(${imageUrl})`;
+                ball.style.backgroundSize = 'cover';
+            } else {
+                ball.style.backgroundColor = color;
+            }
+
+            document.body.appendChild(ball);
+            balls.push({ element: ball, speedX: Math.random() * 10 - 5, speedY: parseFloat(speed) });
+        }
 
         function update(time) {
             if (unlimitedFPS || time - lastTime >= interval) {
@@ -112,13 +80,13 @@
                     let ballA = balls[i];
                     let currentTopA = parseFloat(ballA.element.style.top);
                     let currentLeftA = parseFloat(ballA.element.style.left);
-                    let sizeA = parseFloat(ballA.size);
+                    let sizeA = parseFloat(ballA.element.style.height);
 
                     for (let j = i + 1; j < balls.length; j++) {
                         let ballB = balls[j];
                         let currentTopB = parseFloat(ballB.element.style.top);
                         let currentLeftB = parseFloat(ballB.element.style.left);
-                        let sizeB = parseFloat(ballB.size);
+                        let sizeB = parseFloat(ballB.element.style.height);
 
                         let dx = currentLeftB - currentLeftA;
                         let dy = currentTopB - currentTopA;
@@ -142,11 +110,7 @@
 
                     if (currentTopA >= window.innerHeight - sizeA) {
                         ballA.speedY *= -0.9;
-                        ballA.bounceCount++;
                         bounceCounter++;
-                        if (ballA.bounceCount % 10 === 0) {
-                            ballA.speedY -= boostAmount;
-                        }
                     } else if (currentTopA <= 0) {
                         ballA.speedY *= -1;
                     } else {
@@ -177,6 +141,16 @@
                 interval = 1000 / fps;
             }
         });
+
+        function toggleMenu() {
+            let menu = document.getElementById("menu");
+            menu.style.display = menu.style.display === "none" ? "block" : "none";
+        }
+
+        function toggleStats() {
+            let stats = document.getElementById("stats");
+            stats.style.display = stats.style.display === "none" ? "block" : "none";
+        }
 
         update();
     </script>
