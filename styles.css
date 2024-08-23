@@ -17,8 +17,6 @@ body, html {
     background-color: #f0f0f0;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease;
-    transform-origin: left;
     z-index: 1000;
 }
 
