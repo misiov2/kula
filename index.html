@@ -8,7 +8,7 @@
 </head>
 <body>
     <div id="content">
-        <h1>MISIEK</h1>
+        <h1 id="title">MISIEK</h1>
     </div>
     <div id="menu" style="display: none;">
         <label for="ballSize">Rozmiar Piłki:</label><br>
@@ -34,6 +34,7 @@
             let size = document.getElementById("ballSize").value;
             let speed = document.getElementById("ballSpeed").value;
             createBall(size, speed);
+            animateTitle(); // Dodaj animację po dodaniu piłki
         }
 
         function createBall(size, speed) {
@@ -123,6 +124,14 @@
             statsVisible = !statsVisible;
             let stats = document.getElementById("stats");
             stats.style.display = statsVisible ? "block" : "none";
+        }
+
+        function animateTitle() {
+            let title = document.getElementById("title");
+            title.classList.add("pulse");
+            setTimeout(() => {
+                title.classList.remove("pulse");
+            }, 1000); // Czas trwania animacji
         }
 
         update();
