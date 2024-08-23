@@ -142,13 +142,9 @@ function clearBalls() {
 function setFPS(newFPS) {
     fps = newFPS;
     interval = fps ? 1000 / fps : 0;
-
-    // Restart the animation with the new FPS
-    if (requestId) {
-        cancelAnimationFrame(requestId);
-        lastUpdateTime = performance.now();
-        requestId = requestAnimationFrame(update);
-    }
+    lastUpdateTime = performance.now();
+    cancelAnimationFrame(requestId);
+    requestId = requestAnimationFrame(update);
 }
 
 document.getElementById("fpsSelect").addEventListener("change", function() {
