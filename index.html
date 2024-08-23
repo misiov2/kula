@@ -35,6 +35,8 @@
         <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()"><br><br>
         <label for="statsToggle">Show Stats:</label>
         <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
+        <label for="shakeToggle">Shake Mode:</label>
+        <input type="checkbox" id="shakeToggle" onchange="toggleShake()"><br><br>
     </div>
     <div id="helpBox" onclick="toggleMenu()">?</div>
     <div id="stats" style="display: none;">Bounce Count: <span id="bounceCount">0</span></div>
@@ -49,7 +51,9 @@
         let unlimitedFPS = false;
         let bounceCounter = 0;
         let darkMode = false;
+        let shakeEnabled = false;
         const boostAmount = 10; // Amount of boost for every 5th bounce
+        let shakeThreshold = 15; // Threshold for shake detection
 
         function addBall() {
             let size = document.getElementById("ballSize").value;
@@ -87,18 +91,94 @@
                 trail.style.height = size + "px";
                 trail.style.backgroundColor = color;
                 trail.style.position = "absolute";
-                trail.style.zIndex = "-1"; // Ensure trails are behind balls
+                trail.style.zIndex = "-1"; // Ensure trail is behind the ball
                 document.body.appendChild(trail);
             }
 
-            balls.push({ 
-                element: ball, 
+            balls.push({
+                element: ball,
                 trail: trail,
-                speedX: Math.random() * 10 - 5, 
-                speedY: parseFloat(speed), 
-                bounceCount: 0 
+                speedX: Math.random() * 10 - 5,
+                speedY: parseFloat(speed),
+                bounceCount: 0
             });
         }
+
+        function toggleTrails() {
+            trailsEnabled = !trailsEnabled;
+            balls.forEach(ball => {
+                if (trailsEnabled && !ball.trail) {
+                    let trail = document.createElement("div");
+                    trail.className = "trail";
+                    trail.style.width = ball.element.style.width;
+                    trail.style.height = ball.element.style.height;
+                    trail.style.backgroundColor = ball.element.style.backgroundColor;
+                    trail.style.position = "absolute";
+                    trail.style.zIndex = "-1";
+                    document.body.appendChild(trail);
+                    ball.trail = trail;
+                } else if (!trailsEnabled && ball.trail) {
+                    document.body.removeChild(ball.trail);
+                    ball.trail = null;
+                }
+            });
+        }
+
+        function clearBalls() {
+            balls.forEach(ball => {
+                if (ball.trail) {
+                    document.body.removeChild(ball.trail);
+                }
+                document.body.removeChild(ball.element);
+            });
+            balls = [];
+        }
+
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode', darkMode);
+        }
+
+        function toggleStats() {
+            let stats = document.getElementById("stats");
+            stats.style.display = stats.style.display === "none" ? "block" : "none";
+        }
+
+        function toggleShake() {
+            shakeEnabled = !shakeEnabled;
+            if (shakeEnabled) {
+                window.addEventListener('devicemotion', handleShake);
+            } else {
+                window.removeEventListener('devicemotion', handleShake);
+            }
+        }
+
+        function handleShake(event) {
+            let acceleration = event.accelerationIncludingGravity;
+            let ax = acceleration.x;
+            let ay = acceleration.y;
+            let az = acceleration.z;
+
+            let totalAcceleration = Math.sqrt(ax * ax + ay * ay + az * az);
+
+            if (totalAcceleration > shakeThreshold) {
+                balls.forEach(ball => {
+                    ball.speedX += (Math.random() - 0.5) * 10;
+                    ball.speedY += (Math.random() - 0.5) * 10;
+                });
+            }
+        }
+
+        document.getElementById('fpsSelect').addEventListener('change', (event) => {
+            const selectedValue = parseInt(event.target.value);
+            if (selectedValue === 0) {
+                unlimitedFPS = true;
+            } else {
+                unlimitedFPS = false;
+                fps = selectedValue;
+                interval = 1000 / fps;
+            }
+        });
 
         function update(time) {
             if (unlimitedFPS || time - lastTime >= interval) {
@@ -166,66 +246,6 @@
 
             requestAnimationFrame(update);
         }
-
-        function toggleMenu() {
-            let menu = document.getElementById("menu");
-            menu.style.display = menu.style.display === "none" ? "block" : "none";
-        }
-
-        function toggleStats() {
-            let stats = document.getElementById("stats");
-            stats.style.display = stats.style.display === "none" ? "block" : "none";
-        }
-
-        function toggleDarkMode() {
-            darkMode = !darkMode;
-            document.body.classList.toggle("dark-mode", darkMode);
-            document.getElementById("helpBox").classList.toggle("dark-mode", darkMode);
-            document.getElementById("stats").classList.toggle("dark-mode", darkMode);
-        }
-
-        function toggleTrails() {
-            trailsEnabled = !trailsEnabled;
-            balls.forEach(ball => {
-                if (trailsEnabled) {
-                    let trail = document.createElement("div");
-                    trail.className = "trail";
-                    trail.style.width = ball.element.style.width;
-                    trail.style.height = ball.element.style.height;
-                    trail.style.backgroundColor = ball.element.style.backgroundColor;
-                    trail.style.position = "absolute";
-                    trail.style.zIndex = "-1";
-                    document.body.appendChild(trail);
-                    ball.trail = trail;
-                } else if (!trailsEnabled && ball.trail) {
-                    ball.trail.remove();
-                    ball.trail = null;
-                }
-            });
-        }
-
-        function clearBalls() {
-            balls.forEach(ball => {
-                ball.element.remove();
-                if (ball.trail) {
-                    ball.trail.remove();
-                }
-            });
-            balls = [];
-            bounceCounter = 0;
-            document.getElementById("bounceCount").innerText = bounceCounter;
-        }
-
-        document.getElementById('fpsSelect').addEventListener('change', (event) => {
-            const selectedValue = parseInt(event.target.value);
-            if (selectedValue === 0) {
-                unlimitedFPS = true;
-            } else {
-                unlimitedFPS = false;
-                fps = selectedValue;
-                interval = 1000 / fps;
-            }
-        });
 
         // Start the animation loop
         requestAnimationFrame(update);
