@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Ball Animation</title>
+    <title>Menu z Rozwijaniem</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="menuContainer" class="collapsed">
-        <div id="menuToggle"></div>
         <div id="menu">
             <label for="ballColor">Ball Color:</label><br>
             <input type="color" id="ballColor" value="#ff0000"><br>
@@ -24,11 +23,13 @@
             <button id="clearButton" onclick="clearBalls()">Clear Balls</button><br><br>
             <button id="backgroundButton" onclick="changeBackground()">Change Background</button>
         </div>
+        <div id="menuToggle">&#8226;</div> <!-- Kółko jako przycisk menu -->
     </div>
     <div id="stats" style="display: none;">
         Bounce Count: <span id="bounceCount">0</span><br>
         Ball Count: <span id="ballCount">0</span>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
