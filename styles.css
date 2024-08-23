@@ -74,6 +74,8 @@ body, html {
     border-radius: 50%;
     background-color: red;
     pointer-events: none;
+    /* Dodaj transformację dla kulki */
+    transition: transform 0.1s;
 }
 
 /* Responsywność */
