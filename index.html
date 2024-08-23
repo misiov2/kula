@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rozwijane Menu</title>
+    <title>Animated Ball with Gravity</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Menu kontener -->
-    <div id="menuContainer">
-        <div id="menuToggle">&#9776;</div>
+    <div id="menuContainer" class="collapsed">
         <div id="menuContent">
-            <h1>Menu</h1>
             <label for="ballColor">Ball Color:</label><br>
             <input type="color" id="ballColor" value="#ff0000"><br>
             <label for="ballSize">Ball Size:</label><br>
@@ -26,15 +23,12 @@
             <button id="clearButton">Clear Balls</button><br><br>
             <button id="backgroundButton">Change Background</button>
         </div>
+        <div id="menuToggle">&#9654;</div>
     </div>
-
-    <!-- Statystyki -->
     <div id="stats" style="display: none;">
         Bounce Count: <span id="bounceCount">0</span><br>
         Ball Count: <span id="ballCount">0</span>
     </div>
-
-    <!-- Skrypty -->
     <script src="script.js"></script>
 </body>
 </html>
