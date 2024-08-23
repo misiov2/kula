@@ -1,16 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('menuToggle');
     const addBallButton = document.getElementById('addBallButton');
+    const clearButton = document.getElementById('clearButton');
+    const backgroundButton = document.getElementById('backgroundButton');
     const statsToggle = document.getElementById('statsToggle');
     const statsDiv = document.getElementById('stats');
     const blurAmount = document.getElementById('blurAmount');
-    const clearButton = document.getElementById('clearButton');
-    const backgroundButton = document.getElementById('backgroundButton');
 
     let balls = [];
     let bounceCounter = 0;
 
-    // Funkcja tworząca nową kulkę
     function createBall(size, speed, color) {
         const ball = {
             element: document.createElement('div'),
@@ -32,15 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
         updateBallCount();
     }
 
-    // Funkcja aktualizująca liczbę kulek
     function updateBallCount() {
         document.getElementById('ballCount').innerText = balls.length;
     }
 
-    // Funkcja aktualizująca pozycję kulek
     function update() {
         const gravity = 0.1;
-        const elasticity = 0.8; // Współczynnik sprężystości dla odbić
+        const elasticity = 0.8;
 
         for (let i = 0; i < balls.length; i++) {
             const ballA = balls[i];
@@ -48,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentTopA = parseFloat(ballA.element.style.top);
             const sizeA = ballA.size;
 
-            // Sprawdzenie kolizji z innymi kulkami
             for (let j = i + 1; j < balls.length; j++) {
                 const ballB = balls[j];
                 const currentLeftB = parseFloat(ballB.element.style.left);
@@ -61,17 +57,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const minDistance = sizeA / 2 + sizeB / 2;
 
                 if (distance < minDistance) {
-                    // Obliczanie kąta zderzenia
                     const angle = Math.atan2(dy, dx);
                     const overlap = minDistance - distance;
 
-                    // Przesunięcie kulek
                     ballA.element.style.left = (currentLeftA - Math.cos(angle) * (overlap / 2)) + 'px';
                     ballA.element.style.top = (currentTopA - Math.sin(angle) * (overlap / 2)) + 'px';
                     ballB.element.style.left = (currentLeftB + Math.cos(angle) * (overlap / 2)) + 'px';
                     ballB.element.style.top = (currentTopB + Math.sin(angle) * (overlap / 2)) + 'px';
 
-                    // Obliczanie nowych prędkości po kolizji
                     const normalX = dx / distance;
                     const normalY = dy / distance;
 
@@ -92,23 +85,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         bounceCounter++;
                         document.getElementById('bounceCount').innerText = bounceCounter;
 
-                        // Wybijanie kulek do góry co 5 odbić
                         if (ballA.bounceCount % 5 === 0) {
-                            ballA.speedY = -Math.abs(ballA.speedY); // Skierowanie kulki w górę
+                            ballA.speedY = -Math.abs(ballA.speedY);
                         }
 
                         if (ballB.bounceCount % 5 === 0) {
-                            ballB.speedY = -Math.abs(ballB.speedY); // Skierowanie kulki w górę
+                            ballB.speedY = -Math.abs(ballB.speedY);
                         }
                     }
                 }
             }
 
-            // Aktualizacja pozycji kulki
             ballA.element.style.left = (currentLeftA + ballA.speedX) + 'px';
             ballA.element.style.top = (currentTopA + ballA.speedY) + 'px';
 
-            // Odwrócenie kierunku ruchu po uderzeniu w krawędź ekranu
             if (currentLeftA <= 0 || currentLeftA + sizeA >= window.innerWidth) {
                 ballA.speedX *= -elasticity;
             }
@@ -117,14 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 ballA.speedY *= -elasticity;
             }
 
-            // Dodanie grawitacji
             ballA.speedY += gravity;
         }
 
         requestAnimationFrame(update);
     }
 
-    // Funkcje do obsługi zdarzeń
     menuToggle.addEventListener('click', () => {
         menuContainer.classList.toggle('collapsed');
         menuToggle.innerHTML = menuContainer.classList.contains('collapsed') ? '&#9654;' : '&#9664;';
@@ -135,14 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const speed = parseFloat(document.getElementById('ballSpeed').value);
         const color = document.getElementById('ballColor').value;
         createBall(size, speed, color);
-    });
-
-    statsToggle.addEventListener('change', () => {
-        statsDiv.style.display = statsToggle.checked ? 'block' : 'none';
-    });
-
-    blurAmount.addEventListener('input', () => {
-        document.body.style.filter = `blur(${blurAmount.value}px)`;
     });
 
     clearButton.addEventListener('click', () => {
