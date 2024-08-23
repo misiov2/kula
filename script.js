@@ -64,15 +64,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (distance < minDistance) {
                     // Obliczanie kąta zderzenia
                     let angle = Math.atan2(dy, dx);
-                    // Obliczanie przyspieszenia
-                    let ax = Math.cos(angle) * 0.1;
-                    let ay = Math.sin(angle) * 0.1;
-
-                    // Zastosowanie przyspieszenia do prędkości kulek
-                    ballA.speedX -= ax;
-                    ballA.speedY -= ay;
-                    ballB.speedX += ax;
-                    ballB.speedY += ay;
+                    // Obliczanie normalnych prędkości
+                    let speedA = Math.sqrt(ballA.speedX * ballA.speedX + ballA.speedY * ballA.speedY);
+                    let speedB = Math.sqrt(ballB.speedX * ballB.speedX + ballB.speedY * ballB.speedY);
+                    let normalA = Math.atan2(ballA.speedY, ballA.speedX);
+                    let normalB = Math.atan2(ballB.speedY, ballB.speedX);
+                    
+                    // Prosta wymiana prędkości (zachowanie energii kinetycznej)
+                    let tempSpeedX = ballA.speedX;
+                    let tempSpeedY = ballA.speedY;
+                    ballA.speedX = ballB.speedX;
+                    ballA.speedY = ballB.speedY;
+                    ballB.speedX = tempSpeedX;
+                    ballB.speedY = tempSpeedY;
 
                     // Zwiększenie licznika odbicia
                     ballA.bounceCount++;
