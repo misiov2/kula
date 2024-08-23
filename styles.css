@@ -3,40 +3,28 @@ body, html {
     padding: 0;
     height: 100%;
     overflow: hidden;
-    position: relative;
     background-color: #ffffff; /* Białe tło */
     font-family: Arial, sans-serif;
-}
-
-#content {
-    /* Możesz dodać tutaj styl dla głównej zawartości */
 }
 
 #menuContainer {
     position: fixed;
     top: 0;
     left: 0;
-    width: 250px; /* Szerokość rozwiniętego menu */
-    height: 100%; /* Pełna wysokość ekranu */
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 0 10px 10px 0; /* Zaokrąglenie prawego dolnego rogu */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    transform: translateX(-100%); /* Zwijanie menu na początek */
-    z-index: 1000;
-    overflow: hidden;
-}
-
-#menuFrame {
-    width: 100%;
+    width: 250px;
     height: 100%;
-    border: none;
-    display: block; /* Menu jest zawsze widoczne */
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 0 10px 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1000;
 }
 
-#menuContainer.expanded {
-    transform: translateX(0); /* Rozwijanie menu */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Cień podczas rozwinięcia */
+#menuContent {
+    padding: 20px;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 #menuToggle {
@@ -52,7 +40,7 @@ body, html {
     cursor: pointer;
     position: absolute;
     top: 10px;
-    right: -60px; /* Przycisk zewnętrzny względem menu */
+    right: -60px;
     z-index: 1001;
     transition: background-color 0.3s, transform 0.3s;
 }
@@ -63,6 +51,11 @@ body, html {
 
 #menuToggle:active {
     transform: scale(0.9);
+}
+
+#menuContainer.expanded {
+    transform: translateX(0);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 #stats {
