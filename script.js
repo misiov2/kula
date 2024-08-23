@@ -85,13 +85,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('bounceCount').innerText = bounceCounter;
 
                     // Usuwanie kulki po 5 odbiciach
-                    if (bounceCounter % 5 === 0) {
-                        ballA.element.style.display = 'none';
-                        setTimeout(() => {
-                            document.body.removeChild(ballA.element);
-                            balls = balls.filter(b => b !== ballA);
-                            updateBallCount();
-                        }, 1000);
+                    if (ballA.bounceCount % 5 === 0) {
+                        ballA.speedY = -Math.abs(ballA.speedY); // Skierowanie kulki w górę
+                    }
+
+                    if (ballB.bounceCount % 5 === 0) {
+                        ballB.speedY = -Math.abs(ballB.speedY); // Skierowanie kulki w górę
                     }
                 }
             }
