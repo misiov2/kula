@@ -1,30 +1,41 @@
-/* style.css */
-
 body, html {
     margin: 0;
     padding: 0;
     height: 100%;
     overflow: hidden;
     position: relative;
-    font-family: 'Quicksand', sans-serif;
     background-color: white;
-    color: black;
-    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Dark Mode Styles */
 body.dark-mode {
-    background-color: #121212;
-    color: #e0e0e0;
+    background-color: #333;
+    color: #fff;
 }
 
-/* Content */
+body.dark-mode #menu {
+    background-color: rgba(50, 50, 50, 0.8);
+}
+
+body.dark-mode #helpBox {
+    background-color: #555;
+}
+
+body.dark-mode #stats {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+@font-face {
+    font-family: 'Quicksand';
+    src: url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+}
+
 #content {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+    font-family: 'Quicksand', sans-serif;
 }
 
 #content h1 {
@@ -35,25 +46,14 @@ body.dark-mode {
     margin: 0;
 }
 
-/* Ball */
 .ball {
     width: 50px;
     height: 50px;
+    background-color: red;
     border-radius: 50%;
     position: absolute;
 }
 
-/* Trail */
-.trail {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: -1; /* Smuga powinna być za piłką */
-    opacity: 0.5; /* Przezroczystość smugi */
-    transition: width 0.1s, height 0.1s, background-color 0.1s;
-}
-
-/* Menu */
 #menu {
     position: absolute;
     top: 10px;
@@ -61,23 +61,12 @@ body.dark-mode {
     padding: 10px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s;
 }
 
-body.dark-mode #menu {
-    background-color: rgba(33, 33, 33, 0.8);
-}
-
-/* Menu Inputs */
-#menu input[type="number"], 
-#menu input[type="color"], 
-#menu input[type="file"], 
-#menu select {
+#menu input[type="number"], #menu input[type="color"], #menu input[type="file"], #menu select {
     margin-bottom: 5px;
 }
 
-/* Help Box */
 #helpBox {
     position: absolute;
     top: 10px;
@@ -91,17 +80,19 @@ body.dark-mode #menu {
     cursor: pointer;
 }
 
-/* Stats */
 #stats {
     position: absolute;
     top: 10px;
     right: 10px;
+    font-family: 'Quicksand', sans-serif;
     font-size: 16px;
     color: rgba(0, 0, 0, 0.5);
-    transition: color 0.3s;
 }
 
-body.dark-mode #stats {
-    color: rgba(255, 255, 255, 0.7);
+.trail {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.5;
+    z-index: -1;
 }
-
