@@ -1,0 +1,11 @@
+<div id="menu">
+    <button onclick="addBall()">Add Ball</button>
+    <button onclick="clearBalls()">Clear Balls</button>
+    <button onclick="changeBackground()">Change Background</button>
+    <button onclick="toggleStats()">Toggle Stats</button>
+    <br><br>
+    Ball Size: <input type="number" id="ballSize" value="50" min="10" max="200"><br>
+    Ball Speed: <input type="number" id="ballSpeed" value="2" min="0" max="10"><br>
+    Ball Color: <input type="color" id="ballColor" value="#ff0000"><br>
+    Blur Amount: <input type="number" id="blurAmount" value="0" min="0" max="20" onchange="updateBlur()"><br>
+</div>
