@@ -59,9 +59,7 @@ body, html {
 
 /* Piłki */
 .ball {
-    width: 50px;
-    height: 50px;
-    background-color: red;
     border-radius: 50%; /* Zmiana na okrągły kształt */
     position: absolute;
+    background-color: red;
 }
