@@ -28,6 +28,7 @@
             <option value="60" selected>60 FPS</option>
             <option value="120">120 FPS</option>
             <option value="165">165 FPS</option>
+            <option value="0">Nielimitowane FPS</option>
         </select><br><br>
 
         <button onclick="addBall()">Dodaj Piłkę</button><br><br>
@@ -48,6 +49,7 @@
         let fps = 60;
         let interval = 1000 / fps;
         let lastTime = 0;
+        let unlimitedFPS = false;
 
         function addBall() {
             let size = document.getElementById("ballSize").value;
@@ -83,7 +85,7 @@
         }
 
         function update(time) {
-            if (time - lastTime >= interval) {
+            if (unlimitedFPS || time - lastTime >= interval) {
                 lastTime = time;
                 for (let i = 0; i < balls.length; i++) {
                     let ballA = balls[i];
@@ -172,7 +174,12 @@
 
         document.getElementById("fpsSelect").addEventListener("change", function() {
             fps = parseInt(this.value, 10);
-            interval = 1000 / fps;
+            if (fps === 0) {
+                unlimitedFPS = true;
+            } else {
+                unlimitedFPS = false;
+                interval = 1000 / fps;
+            }
         });
 
         update();
