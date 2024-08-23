@@ -34,7 +34,6 @@
             let size = document.getElementById("ballSize").value;
             let speed = document.getElementById("ballSpeed").value;
             createBall(size, speed);
-            animateTitle(); // Dodaj animację po dodaniu piłki
         }
 
         function createBall(size, speed) {
@@ -93,6 +92,7 @@
                     ballA.speedY *= -0.9; // Opór powietrza
                     ballA.bounceCount++;
                     bounceCounter++;
+                    animateTitle(); // Dodaj animację przy odbiciu
                     if (ballA.bounceCount % 10 === 0) {
                         ballA.speedY -= boostAmount;
                     }
