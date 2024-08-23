@@ -2,13 +2,13 @@ document.addEventListener("DOMContentLoaded", function() {
     // Toggle menu visibility
     function toggleMenu() {
         let menuContainer = document.getElementById("menuContainer");
-        menuContainer.classList.toggle("expanded");
+        menuContainer.classList.toggle("collapsed");
 
         let toggle = document.getElementById("menuToggle");
-        if (menuContainer.classList.contains("expanded")) {
-            toggle.innerHTML = "&#8211;"; // Symbol minus
+        if (menuContainer.classList.contains("collapsed")) {
+            toggle.innerHTML = "&#9654;"; // Strzałka w prawo
         } else {
-            toggle.innerHTML = "&#8226;"; // Kółko jako przycisk menu
+            toggle.innerHTML = "&#9664;"; // Strzałka w lewo
         }
     }
 
