@@ -18,6 +18,7 @@
             padding: 10px;
             border-radius: 5px;
             color: white;
+            z-index: 10;
         }
         .collapsed {
             display: none;
@@ -41,6 +42,10 @@
         #ballCount, #bounceCount {
             display: inline-block;
             margin: 0 5px;
+        }
+        .ball {
+            position: absolute;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -89,11 +94,10 @@
                     bounceCount: 0
                 };
 
+                ball.element.className = 'ball';
                 ball.element.style.width = size + 'px';
                 ball.element.style.height = size + 'px';
-                ball.element.style.borderRadius = '50%';
                 ball.element.style.backgroundColor = color;
-                ball.element.style.position = 'absolute';
                 ball.element.style.left = Math.random() * (window.innerWidth - size) + 'px';
                 ball.element.style.top = Math.random() * (window.innerHeight - size) + 'px';
 
