@@ -4,48 +4,71 @@ body, html {
     height: 100%;
     overflow: hidden;
     position: relative;
-    background-color: white; /* Zmieniono na białe tło */
+    background-color: #ffffff; /* Białe tło */
+}
+
+@font-face {
+    font-family: 'Quicksand';
+    src: url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
 }
 
 #menuContainer {
     position: absolute;
     top: 10px;
     left: 10px;
+    width: 300px;
+    height: 95%;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    max-width: 300px;
-    cursor: grab;
-    z-index: 1000;
+    transition: transform 0.3s ease, left 0.3s ease, top 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 #menu {
     padding: 10px;
-    max-width: 250px;
     overflow-y: auto;
 }
 
 #menuToggle {
-    width: 30px; /* Zwiększono rozmiar dla lepszej widoczności */
-    height: 30px; /* Zwiększono rozmiar dla lepszej widoczności */
+    width: 30px;
+    height: 30px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: black;
+    color: white;
     border-radius: 50%;
     position: absolute;
-    top: -15px; /* Wyśrodkowanie kółka względem menu */
-    left: -15px; /* Wyśrodkowanie kółka względem menu */
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    left: -15px; /* Połówka szerokości przycisku */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    z-index: 1000; /* Upewnij się, że jest nad menu */
 }
 
 #menuContainer.collapsed {
-    transform: scale(0);
-    opacity: 0;
+    transform: translateX(-100%);
 }
 
 #menuContainer.expanded {
-    transform: scale(1);
-    opacity: 1;
+    transform: translateX(0);
+}
+
+#menuToggle:active {
+    cursor: grabbing;
+}
+
+#stats {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .ball {
@@ -54,5 +77,6 @@ body, html {
     background-color: red;
     border-radius: 50%;
     position: absolute;
-    filter: blur(0px);
+    filter: blur(0px); /* Default value */
 }
+
