@@ -94,6 +94,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     bounceCounter++;
                     document.getElementById('bounceCount').innerText = bounceCounter;
+
+                    if (bounceCounter % 5 === 0) {
+                        ballA.element.style.display = 'none';
+                        setTimeout(() => {
+                            document.body.removeChild(ballA.element);
+                            balls = balls.filter(b => b !== ballA);
+                            updateBallCount();
+                        }, 1000);
+                    }
                 }
             }
 
