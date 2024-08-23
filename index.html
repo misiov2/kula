@@ -18,237 +18,30 @@
         <label for="ballColor">Ball Color:</label><br>
         <input type="color" id="ballColor" value="#ff0000"><br>
         <label for="ballImage">Ball Image:</label><br>
-        <input type="file" id="ballImage" accept="image/*"><br>
-        <label for="trailsToggle">Enable Trails:</label>
+        <input type="file" id="ballImage" accept="image/*"><br><br>
+        <button onclick="addBall()">Add Ball</button><br><br>
+        <label for="statsToggle">Show Stats:</label><br>
+        <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
+        <label for="trailsToggle">Enable Trails:</label><br>
         <input type="checkbox" id="trailsToggle" onchange="toggleTrails()"><br><br>
+        <label for="darkModeToggle">Dark Mode:</label><br>
+        <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()"><br><br>
+        <label for="shakeToggle">Enable Shake:</label><br>
+        <input type="checkbox" id="shakeToggle" onchange="toggleShake()"><br><br>
         <label for="fpsSelect">FPS:</label><br>
         <select id="fpsSelect">
             <option value="0">Unlimited</option>
             <option value="30">30 FPS</option>
-            <option value="60" selected>60 FPS</option>
+            <option value="60">60 FPS</option>
             <option value="120">120 FPS</option>
             <option value="165">165 FPS</option>
         </select><br><br>
-        <button onclick="addBall()">Add Ball</button><br><br>
-        <button onclick="clearBalls()">Clear Balls</button><br><br>
-        <label for="darkModeToggle">Dark Mode:</label>
-        <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()"><br><br>
-        <label for="statsToggle">Show Stats:</label>
-        <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
-        <label for="shakeToggle">Shake Mode:</label>
-        <input type="checkbox" id="shakeToggle" onchange="toggleShake()"><br><br>
+        <button onclick="clearBalls()">Clear Balls</button>
     </div>
     <div id="helpBox" onclick="toggleMenu()">?</div>
     <div id="stats" style="display: none;">Bounce Count: <span id="bounceCount">0</span></div>
 
-    <script>
-        let balls = [];
-        let trailsEnabled = false;
-        let gravity = 0.2;
-        let fps = 60;
-        let interval = 1000 / fps;
-        let lastTime = 0;
-        let unlimitedFPS = false;
-        let bounceCounter = 0;
-        let darkMode = false;
-        let shakeEnabled = false;
-        const boostAmount = 10; // Amount of boost for every 5th bounce
-        let shakeThreshold = 15; // Threshold for shake detection
-
-        function addBall() {
-            let size = document.getElementById("ballSize").value;
-            let speed = document.getElementById("ballSpeed").value;
-            let color = document.getElementById("ballColor").value;
-            let imageInput = document.getElementById("ballImage");
-            let imageUrl = imageInput.files.length > 0 ? URL.createObjectURL(imageInput.files[0]) : null;
-            createBall(size, speed, color, imageUrl);
-        }
-
-        function createBall(size, speed, color, imageUrl) {
-            let ball = document.createElement("div");
-            ball.className = "ball";
-            ball.style.width = size + "px";
-            ball.style.height = size + "px";
-            ball.style.borderRadius = "50%";
-            ball.style.position = "absolute";
-            ball.style.left = Math.random() * (window.innerWidth - size) + "px";
-            ball.style.top = Math.random() * (window.innerHeight - size) + "px";
-
-            if (imageUrl) {
-                ball.style.backgroundImage = `url(${imageUrl})`;
-                ball.style.backgroundSize = 'cover';
-            } else {
-                ball.style.backgroundColor = color;
-            }
-
-            document.body.appendChild(ball);
-
-            let trail = null;
-            if (trailsEnabled) {
-                trail = document.createElement("div");
-                trail.className = "trail";
-                trail.style.width = size + "px";
-                trail.style.height = size + "px";
-                trail.style.backgroundColor = color;
-                trail.style.position = "absolute";
-                trail.style.zIndex = "-1"; // Ensure trail is behind the ball
-                document.body.appendChild(trail);
-            }
-
-            balls.push({
-                element: ball,
-                trail: trail,
-                speedX: Math.random() * 10 - 5,
-                speedY: parseFloat(speed),
-                bounceCount: 0
-            });
-        }
-
-        function toggleTrails() {
-            trailsEnabled = !trailsEnabled;
-            balls.forEach(ball => {
-                if (trailsEnabled && !ball.trail) {
-                    let trail = document.createElement("div");
-                    trail.className = "trail";
-                    trail.style.width = ball.element.style.width;
-                    trail.style.height = ball.element.style.height;
-                    trail.style.backgroundColor = ball.element.style.backgroundColor;
-                    trail.style.position = "absolute";
-                    trail.style.zIndex = "-1";
-                    document.body.appendChild(trail);
-                    ball.trail = trail;
-                } else if (!trailsEnabled && ball.trail) {
-                    document.body.removeChild(ball.trail);
-                    ball.trail = null;
-                }
-            });
-        }
-
-        function clearBalls() {
-            balls.forEach(ball => {
-                if (ball.trail) {
-                    document.body.removeChild(ball.trail);
-                }
-                document.body.removeChild(ball.element);
-            });
-            balls = [];
-        }
-
-        function toggleDarkMode() {
-            darkMode = !darkMode;
-            document.body.classList.toggle('dark-mode', darkMode);
-        }
-
-        function toggleStats() {
-            let stats = document.getElementById("stats");
-            stats.style.display = stats.style.display === "none" ? "block" : "none";
-        }
-
-        function toggleShake() {
-            shakeEnabled = !shakeEnabled;
-            if (shakeEnabled) {
-                window.addEventListener('devicemotion', handleShake);
-            } else {
-                window.removeEventListener('devicemotion', handleShake);
-            }
-        }
-
-        function handleShake(event) {
-            let acceleration = event.accelerationIncludingGravity;
-            let ax = acceleration.x;
-            let ay = acceleration.y;
-            let az = acceleration.z;
-
-            let totalAcceleration = Math.sqrt(ax * ax + ay * ay + az * az);
-
-            if (totalAcceleration > shakeThreshold) {
-                balls.forEach(ball => {
-                    ball.speedX += (Math.random() - 0.5) * 10;
-                    ball.speedY += (Math.random() - 0.5) * 10;
-                });
-            }
-        }
-
-        document.getElementById('fpsSelect').addEventListener('change', (event) => {
-            const selectedValue = parseInt(event.target.value);
-            if (selectedValue === 0) {
-                unlimitedFPS = true;
-            } else {
-                unlimitedFPS = false;
-                fps = selectedValue;
-                interval = 1000 / fps;
-            }
-        });
-
-        function update(time) {
-            if (unlimitedFPS || time - lastTime >= interval) {
-                lastTime = time;
-                for (let i = 0; i < balls.length; i++) {
-                    let ballA = balls[i];
-                    let currentTopA = parseFloat(ballA.element.style.top);
-                    let currentLeftA = parseFloat(ballA.element.style.left);
-                    let sizeA = parseFloat(ballA.element.style.height);
-
-                    if (ballA.trail) {
-                        ballA.trail.style.left = currentLeftA + "px";
-                        ballA.trail.style.top = currentTopA + "px";
-                    }
-
-                    for (let j = i + 1; j < balls.length; j++) {
-                        let ballB = balls[j];
-                        let currentTopB = parseFloat(ballB.element.style.top);
-                        let currentLeftB = parseFloat(ballB.element.style.left);
-                        let sizeB = parseFloat(ballB.element.style.height);
-
-                        let dx = currentLeftB - currentLeftA;
-                        let dy = currentTopB - currentTopA;
-                        let distance = Math.sqrt(dx * dx + dy * dy);
-                        let minDistance = sizeA / 2 + sizeB / 2;
-
-                        if (distance < minDistance) {
-                            let angle = Math.atan2(dy, dx);
-                            let targetX = currentLeftA + Math.cos(angle) * minDistance;
-                            let targetY = currentTopA + Math.sin(angle) * minDistance;
-
-                            let ax = (targetX - currentLeftA) * 0.1;
-                            let ay = (targetY - currentTopA) * 0.1;
-
-                            ballA.speedX -= ax;
-                            ballA.speedY -= ay;
-                            ballB.speedX += ax;
-                            ballB.speedY += ay;
-                        }
-                    }
-
-                    if (currentTopA >= window.innerHeight - sizeA) {
-                        ballA.speedY *= -0.9;
-                        ballA.bounceCount++;
-                        bounceCounter++;
-                        if (ballA.bounceCount % 5 === 0) {
-                            ballA.speedY -= boostAmount;
-                        }
-                    } else if (currentTopA <= 0) {
-                        ballA.speedY *= -1;
-                    } else {
-                        ballA.speedY += gravity;
-                    }
-
-                    if (currentLeftA <= 0 || currentLeftA >= window.innerWidth - sizeA) {
-                        ballA.speedX *= -1;
-                    }
-
-                    ballA.element.style.top = Math.min(Math.max(currentTopA + ballA.speedY, 0), window.innerHeight - sizeA) + "px";
-                    ballA.element.style.left = Math.min(Math.max(currentLeftA + ballA.speedX, 0), window.innerWidth - sizeA) + "px";
-                }
-
-                document.getElementById("bounceCount").innerText = bounceCounter;
-            }
-
-            requestAnimationFrame(update);
-        }
-
-        // Start the animation loop
-        requestAnimationFrame(update);
-    </script>
+    <!-- Include the external script -->
+    <script src="script.js"></script>
 </body>
 </html>
