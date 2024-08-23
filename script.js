@@ -7,6 +7,7 @@ let bounceCounter = 0;
 let isDragging = false;
 let offset = { x: 0, y: 0 };
 
+// Add ball to the screen
 function addBall() {
     let size = document.getElementById("ballSize").value;
     let speed = document.getElementById("ballSpeed").value;
@@ -14,6 +15,7 @@ function addBall() {
     createBall(size, speed, color);
 }
 
+// Create a ball element
 function createBall(size, speed, color) {
     let ball = document.createElement("div");
     ball.className = "ball";
@@ -27,14 +29,17 @@ function createBall(size, speed, color) {
     updateBallCount();
 }
 
+// Update ball count display
 function updateBallCount() {
     document.getElementById("ballCount").innerText = balls.length;
 }
 
+// Get a random color for background
 function getRandomColor() {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
 
+// Update the position of the balls
 function update() {
     for (let i = 0; i < balls.length; i++) {
         let ballA = balls[i];
@@ -94,24 +99,30 @@ function update() {
     requestAnimationFrame(update);
 }
 
+// Toggle menu visibility
 function toggleMenu() {
     let menuContainer = document.getElementById("menuContainer");
-    menuContainer.classList.toggle("collapsed");
-
     let toggle = document.getElementById("menuToggle");
+
     if (menuContainer.classList.contains("collapsed")) {
-        toggle.innerHTML = "&#9654;"; // Arrow pointing right
+        menuContainer.classList.remove("collapsed");
+        menuContainer.classList.add("expanded");
+        toggle.style.backgroundColor = 'black';
     } else {
-        toggle.innerHTML = "&#9664;"; // Arrow pointing left
+        menuContainer.classList.remove("expanded");
+        menuContainer.classList.add("collapsed");
+        toggle.style.backgroundColor = 'transparent';
     }
 }
 
+// Toggle stats visibility
 function toggleStats() {
     statsVisible = !statsVisible;
     let stats = document.getElementById("stats");
     stats.style.display = statsVisible ? "block" : "none";
 }
 
+// Update motion blur of balls
 function updateBlur() {
     let blurValue = document.getElementById("blurAmount").value;
     document.querySelectorAll(".ball").forEach(ball => {
@@ -119,6 +130,7 @@ function updateBlur() {
     });
 }
 
+// Clear all balls from the screen
 function clearBalls() {
     balls.forEach(ball => {
         ball.element.remove();
@@ -129,14 +141,16 @@ function clearBalls() {
     document.getElementById("bounceCount").innerText = bounceCounter;
 }
 
+// Change background color of the body
 function changeBackground() {
     document.body.style.backgroundColor = getRandomColor();
 }
 
 // Dragging functionality for the menu
 const menuContainer = document.getElementById("menuContainer");
+const menuToggle = document.getElementById("menuToggle");
 
-menuContainer.addEventListener('mousedown', function (e) {
+menuToggle.addEventListener('mousedown', function (e) {
     isDragging = true;
     offset.x = e.clientX - menuContainer.offsetLeft;
     offset.y = e.clientY - menuContainer.offsetTop;
