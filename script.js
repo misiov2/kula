@@ -1,47 +1,33 @@
-document.addEventListener("DOMContentLoaded", function() {
-    function toggleMenu() {
-        let menuContainer = document.getElementById("menuContainer");
-        menuContainer.classList.toggle("expanded");
+document.addEventListener('DOMContentLoaded', () => {
+    const menuContainer = document.getElementById('menuContainer');
+    const menuToggle = document.getElementById('menuToggle');
 
-        let toggle = document.getElementById("menuToggle");
-        if (menuContainer.classList.contains("expanded")) {
-            toggle.innerHTML = "&#9664;"; // Strzałka w lewo
-        } else {
-            toggle.innerHTML = "&#9654;"; // Strzałka w prawo
-        }
-    }
+    let isMenuOpen = false;
 
-    function makeMenuDraggable(elmnt) {
-        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-        document.getElementById("menuToggle").onmousedown = dragMouseDown;
+    menuToggle.addEventListener('click', () => {
+        isMenuOpen = !isMenuOpen;
+        menuContainer.classList.toggle('expanded', isMenuOpen);
+        menuToggle.innerHTML = isMenuOpen ? '&#9664;' : '&#9654;'; // Przycisk zmienia kształt
+    });
 
-        function dragMouseDown(e) {
-            e = e || window.event;
-            e.preventDefault();
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            document.onmouseup = closeDragElement;
-            document.onmousemove = elementDrag;
-        }
+    // Dodanie funkcji przesuwania menu
+    let startX, startY, initialLeft, initialTop;
+    menuContainer.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        initialLeft = parseFloat(window.getComputedStyle(menuContainer).left);
+        initialTop = parseFloat(window.getComputedStyle(menuContainer).top);
+        menuContainer.style.transition = 'none'; // Wyłączenie animacji podczas przesuwania
+    });
 
-        function elementDrag(e) {
-            e = e || window.event;
-            e.preventDefault();
-            pos1 = pos3 - e.clientX;
-            pos2 = pos4 - e.clientY;
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-        }
+    menuContainer.addEventListener('touchmove', (e) => {
+        const deltaX = e.touches[0].clientX - startX;
+        const deltaY = e.touches[0].clientY - startY;
+        menuContainer.style.left = `${Math.max(0, Math.min(initialLeft + deltaX, window.innerWidth - menuContainer.offsetWidth))}px`;
+        menuContainer.style.top = `${Math.max(0, Math.min(initialTop + deltaY, window.innerHeight - menuContainer.offsetHeight))}px`;
+    });
 
-        function closeDragElement() {
-            document.onmouseup = null;
-            document.onmousemove = null;
-        }
-    }
-
-    makeMenuDraggable(document.getElementById("menuContainer"));
-
-    document.getElementById("menuToggle").addEventListener("click", toggleMenu);
+    menuContainer.addEventListener('touchend', () => {
+        menuContainer.style.transition = 'transform 0.3s ease'; // Przywrócenie animacji
+    });
 });
