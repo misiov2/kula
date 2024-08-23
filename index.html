@@ -11,9 +11,24 @@
         <!-- Główna zawartość strony -->
     </div>
     
-    <!-- Kontener menu załadowany z pliku menu.html -->
     <div id="menuContainer" class="collapsed">
         <div id="menuToggle">&#8226;</div> <!-- Kółko jako przycisk menu -->
+        <div id="menu">
+            <!-- Treść menu -->
+            <label for="ballColor">Ball Color:</label><br>
+            <input type="color" id="ballColor" value="#ff0000"><br>
+            <label for="ballSize">Ball Size:</label><br>
+            <input type="number" id="ballSize" value="50"><br>
+            <label for="ballSpeed">Ball Speed:</label><br>
+            <input type="number" id="ballSpeed" value="2"><br>
+            <button id="addBallButton" onclick="addBall()">Add Ball</button><br><br>
+            <label for="statsToggle">Show Stats:</label>
+            <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
+            <label for="blurAmount">Motion Blur:</label>
+            <input type="range" id="blurAmount" min="0" max="10" value="0" onchange="updateBlur()"><br><br>
+            <button id="clearButton" onclick="clearBalls()">Clear Balls</button><br><br>
+            <button id="backgroundButton" onclick="changeBackground()">Change Background</button>
+        </div>
     </div>
 
     <div id="stats" style="display: none;">
@@ -21,59 +36,6 @@
         Ball Count: <span id="ballCount">0</span>
     </div>
 
-    <!-- Załaduj menu.html do #menuContainer -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            fetch('menu.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('menuContainer').insertAdjacentHTML('beforeend', data);
-                    initMenu();
-                });
-        });
-
-        function initMenu() {
-            document.getElementById("menuToggle").addEventListener("click", toggleMenu);
-            makeDraggable();
-        }
-
-        function toggleMenu() {
-            let menuContainer = document.getElementById("menuContainer");
-            menuContainer.classList.toggle("collapsed");
-            menuContainer.classList.toggle("expanded");
-
-            let toggle = document.getElementById("menuToggle");
-            if (menuContainer.classList.contains("collapsed")) {
-                toggle.innerHTML = "&#8226;"; // Kółko
-            } else {
-                toggle.innerHTML = "&#9664;"; // Strzałka w lewo
-            }
-        }
-
-        function makeDraggable() {
-            const menuContainer = document.getElementById("menuContainer");
-            let offsetX, offsetY, isDragging = false;
-
-            menuContainer.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                offsetX = e.clientX - parseFloat(window.getComputedStyle(menuContainer).left);
-                offsetY = e.clientY - parseFloat(window.getComputedStyle(menuContainer).top);
-                menuContainer.style.cursor = 'grabbing';
-            });
-
-            window.addEventListener('mousemove', (e) => {
-                if (isDragging) {
-                    menuContainer.style.left = `${e.clientX - offsetX}px`;
-                    menuContainer.style.top = `${e.clientY - offsetY}px`;
-                }
-            });
-
-            window.addEventListener('mouseup', () => {
-                isDragging = false;
-                menuContainer.style.cursor = 'grab';
-            });
-        }
-    </script>
     <script src="script.js"></script>
 </body>
 </html>
