@@ -64,18 +64,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (distance < minDistance) {
                     // Obliczanie kąta zderzenia
                     let angle = Math.atan2(dy, dx);
-                    // Obliczanie punktu kolizji
-                    let targetX = currentLeftA + Math.cos(angle) * minDistance;
-                    let targetY = currentTopA + Math.sin(angle) * minDistance;
                     // Obliczanie przyspieszenia
-                    let ax = (targetX - currentLeftB) * 0.05;
-                    let ay = (targetY - currentTopB) * 0.05;
+                    let ax = Math.cos(angle) * 0.1;
+                    let ay = Math.sin(angle) * 0.1;
 
                     // Zastosowanie przyspieszenia do prędkości kulek
-                    ballA.speedX += ax;
-                    ballA.speedY += ay;
-                    ballB.speedX -= ax;
-                    ballB.speedY -= ay;
+                    ballA.speedX -= ax;
+                    ballA.speedY -= ay;
+                    ballB.speedX += ax;
+                    ballB.speedY += ay;
 
                     // Zwiększenie licznika odbicia
                     ballA.bounceCount++;
@@ -84,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     bounceCounter++;
                     document.getElementById('bounceCount').innerText = bounceCounter;
 
-                    // Usuwanie kulki po 5 odbiciach
+                    // Wybijanie kulek do góry co 5 odbić
                     if (ballA.bounceCount % 5 === 0) {
                         ballA.speedY = -Math.abs(ballA.speedY); // Skierowanie kulki w górę
                     }
