@@ -5,7 +5,7 @@ let statsVisible = false;
 let bounceCounter = 0;
 let darkModeEnabled = false;
 let fps = 0;
-let interval = 0;
+let interval = 1000 / 60; // Default to 60 FPS
 let lastUpdateTime = 0;
 let requestId = null;
 
@@ -48,8 +48,10 @@ function createBall(size, speed, color, imageURL) {
 
 function update() {
     const now = performance.now();
-    if (now - lastUpdateTime >= interval) {
-        lastUpdateTime = now;
+    const timeElapsed = now - lastUpdateTime;
+
+    if (timeElapsed >= interval) {
+        lastUpdateTime = now - (timeElapsed % interval);
 
         for (let i = 0; i < balls.length; i++) {
             let ballA = balls[i];
@@ -141,15 +143,17 @@ function clearBalls() {
 
 function setFPS(newFPS) {
     fps = newFPS;
-    interval = fps ? 1000 / fps : 0;
-    lastUpdateTime = performance.now();
-    cancelAnimationFrame(requestId);
-    requestId = requestAnimationFrame(update);
+    interval = fps ? 1000 / fps : 1000 / 60; // Default to 60 FPS if unlimited
+    lastUpdateTime = performance.now(); // Reset update time
 }
 
 document.getElementById("fpsSelect").addEventListener("change", function() {
     setFPS(parseInt(this.value, 10));
+    if (requestId) {
+        cancelAnimationFrame(requestId);
+        requestId = requestAnimationFrame(update);
+    }
 });
 
 // Initialize FPS settings and start animation
-setFPS(0);
+requestId = requestAnimationFrame(update);
