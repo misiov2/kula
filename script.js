@@ -4,9 +4,7 @@ let boostCounter = 0;
 const boostAmount = 10; // Amount of speed boost after every 5 bounces
 let statsVisible = false;
 let bounceCounter = 0;
-let trailsEnabled = false;
 let darkModeEnabled = false;
-let shakeEnabled = false;
 let fps = 0;
 let unlimitedFPS = true;
 let interval = 0;
@@ -39,30 +37,14 @@ function createBall(size, speed, color, imageURL) {
     ball.style.left = Math.random() * (window.innerWidth - size) + "px";
     ball.style.top = Math.random() * (window.innerHeight - size) + "px";
     document.body.appendChild(ball);
-    
-    if (trailsEnabled) {
-        let trail = document.createElement("div");
-        trail.className = "trail";
-        trail.style.width = size + "px";
-        trail.style.height = size + "px";
-        trail.style.backgroundColor = color;
-        document.body.appendChild(trail);
-        balls.push({ 
-            element: ball, 
-            speedX: Math.random() * 10 - 5, 
-            speedY: parseFloat(speed), 
-            bounceCount: 0,
-            trail: trail 
-        });
-    } else {
-        balls.push({ 
-            element: ball, 
-            speedX: Math.random() * 10 - 5, 
-            speedY: parseFloat(speed), 
-            bounceCount: 0,
-            trail: null 
-        });
-    }
+
+    balls.push({ 
+        element: ball, 
+        speedX: Math.random() * 10 - 5, 
+        speedY: parseFloat(speed), 
+        bounceCount: 0,
+        trail: null 
+    });
 }
 
 function getRandomColor() {
@@ -118,9 +100,6 @@ function update(time) {
                 if (ballA.bounceCount % 5 === 0) {
                     ballA.speedY -= boostAmount;
                 }
-                if (shakeEnabled) {
-                    window.scrollTo(0, Math.random() * 10 - 5);
-                }
             } else if (currentTopA <= 0) {
                 ballA.speedY *= -1;
             } else {
@@ -152,22 +131,13 @@ function toggleStats() {
     stats.style.display = statsVisible ? "block" : "none";
 }
 
-function toggleTrails() {
-    trailsEnabled = !trailsEnabled;
-}
-
 function toggleDarkMode() {
     darkModeEnabled = !darkModeEnabled;
     document.body.classList.toggle("dark-mode", darkModeEnabled);
 }
 
-function toggleShake() {
-    shakeEnabled = !shakeEnabled;
-}
-
 function clearBalls() {
     document.querySelectorAll('.ball').forEach(ball => ball.remove());
-    document.querySelectorAll('.trail').forEach(trail => trail.remove());
     balls = [];
     bounceCounter = 0;
     document.getElementById("bounceCount").innerText = bounceCounter;
