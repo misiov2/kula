@@ -12,15 +12,16 @@ body, html {
 }
 
 #menuContainer {
-    position: fixed; /* Menu będzie zawsze widoczne na ekranie */
-    top: 10px;
-    left: 10px;
-    width: 300px; /* Szerokość rozwiniętego menu */
-    height: 95%; /* Wysokość rozwiniętego menu */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px; /* Szerokość rozwiniętego menu */
+    height: 100%; /* Pełna wysokość ekranu */
     background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 10px; /* Zaokrąglenie krawędzi */
+    border-radius: 0 10px 10px 0; /* Zaokrąglenie prawego dolnego rogu */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease; /* Animacja dla rozwijania/zwijania */
+    transition: transform 0.3s ease;
+    transform: translateX(-100%); /* Zwijanie menu na początek */
     z-index: 1000;
     overflow: hidden;
 }
@@ -32,8 +33,8 @@ body, html {
     display: block; /* Menu jest zawsze widoczne */
 }
 
-#menuContainer.collapsed {
-    transform: translateX(calc(100% + 20px)); /* Zwijanie menu poza ekran */
+#menuContainer.expanded {
+    transform: translateX(0); /* Rozwijanie menu */
 }
 
 #menuToggle {
@@ -48,9 +49,9 @@ body, html {
     font-size: 20px;
     cursor: pointer;
     position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 1001; /* Upewnij się, że jest nad menu */
+    top: 10px;
+    right: -60px; /* Przycisk zewnętrzny względem menu */
+    z-index: 1001;
 }
 
 #menuToggle:active {
