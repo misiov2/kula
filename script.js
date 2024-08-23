@@ -1,9 +1,7 @@
 let balls = [];
 let gravity = 0.2;
-let boostCounter = 0;
-const boostAmount = 10;
-let statsVisible = false;
 let bounceCounter = 0;
+let statsVisible = false;
 
 function addBall() {
     let size = document.getElementById("ballSize").value;
@@ -21,12 +19,7 @@ function createBall(size, speed, color) {
     ball.style.left = Math.random() * (window.innerWidth - size) + "px";
     ball.style.top = Math.random() * (window.innerHeight - size) + "px";
     document.body.appendChild(ball);
-    balls.push({
-        element: ball,
-        speedX: Math.random() * 10 - 5,
-        speedY: parseFloat(speed),
-        bounceCount: 0
-    });
+    balls.push({ element: ball, speedX: Math.random() * 10 - 5, speedY: parseFloat(speed), bounceCount: 0 });
     updateBallCount();
 }
 
@@ -41,38 +34,12 @@ function update() {
         let currentLeftA = parseFloat(ballA.element.style.left);
         let sizeA = parseFloat(ballA.element.style.height);
 
-        for (let j = i + 1; j < balls.length; j++) {
-            let ballB = balls[j];
-            let currentTopB = parseFloat(ballB.element.style.top);
-            let currentLeftB = parseFloat(ballB.element.style.left);
-            let sizeB = parseFloat(ballB.element.style.height);
-
-            let dx = currentLeftB - currentLeftA;
-            let dy = currentTopB - currentTopA;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-            let minDistance = sizeA / 2 + sizeB / 2;
-
-            if (distance < minDistance) {
-                let angle = Math.atan2(dy, dx);
-                let targetX = currentLeftA + Math.cos(angle) * minDistance;
-                let targetY = currentTopA + Math.sin(angle) * minDistance;
-
-                let ax = (targetX - currentLeftA) * 0.1;
-                let ay = (targetY - currentTopA) * 0.1;
-
-                ballA.speedX -= ax;
-                ballA.speedY -= ay;
-                ballB.speedX += ax;
-                ballB.speedY += ay;
-            }
-        }
-
         if (currentTopA >= window.innerHeight - sizeA) {
             ballA.speedY *= -0.9;
             ballA.bounceCount++;
             bounceCounter++;
             if (ballA.bounceCount % 5 === 0) {
-                ballA.speedY -= boostAmount;
+                ballA.speedY -= 10;
             }
         } else if (currentTopA <= 0) {
             ballA.speedY *= -1;
@@ -99,9 +66,9 @@ function toggleMenu() {
 
     let toggle = document.getElementById("menuToggle");
     if (menuContainer.classList.contains("collapsed")) {
-        toggle.innerHTML = "&#9654;"; // Arrow pointing right
+        toggle.innerHTML = "&#9654;";
     } else {
-        toggle.innerHTML = "&#9664;"; // Arrow pointing left
+        toggle.innerHTML = "&#9664;";
     }
 }
 
@@ -136,5 +103,33 @@ function getRandomColor() {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
 
-// Rozpoczęcie animacji
+// Dodaj obsługę przeciągania
+let isDragging = false;
+let startX, startY, initialLeft, initialTop;
+
+const menuContainer = document.getElementById("menuContainer");
+
+menuContainer.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    initialLeft = menuContainer.offsetLeft;
+    initialTop = menuContainer.offsetTop;
+    menuContainer.classList.add("dragging");
+});
+
+document.addEventListener("mousemove", (e) => {
+    if (isDragging) {
+        let deltaX = e.clientX - startX;
+        let deltaY = e.clientY - startY;
+        menuContainer.style.left = `${initialLeft + deltaX}px`;
+        menuContainer.style.top = `${initialTop + deltaY}px`;
+    }
+});
+
+document.addEventListener("mouseup", () => {
+    isDragging = false;
+    menuContainer.classList.remove("dragging");
+});
+
 update();
