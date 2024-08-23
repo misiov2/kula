@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     menuToggle.addEventListener('click', () => {
         isMenuOpen = !isMenuOpen;
         menuContainer.classList.toggle('expanded', isMenuOpen);
-        menuToggle.innerHTML = isMenuOpen ? '&#9664;' : '&#9654;';
+        menuToggle.innerHTML = isMenuOpen ? '&#9664;' : '&#9776;';
     });
 
     // Przesuwanie menu
@@ -81,13 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     let angle = Math.atan2(dy, dx);
                     let targetX = currentLeftA + Math.cos(angle) * minDistance;
                     let targetY = currentTopA + Math.sin(angle) * minDistance;
-
-                    let ax = (targetX - currentLeftA) * 0.1;
-                    let ay = (targetY - currentTopA) * 0.1;
+                    let ax = (targetX - currentLeftB) * 0.05;
+                    let ay = (targetY - currentTopB) * 0.05;
 
                     ballA.speedX += ax;
                     ballA.speedY += ay;
-
                     ballB.speedX -= ax;
                     ballB.speedY -= ay;
 
