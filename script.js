@@ -85,10 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     let ax = (targetX - currentLeftA) * 0.1;
                     let ay = (targetY - currentTopA) * 0.1;
 
-                    ballA.speedX -= ax;
-                    ballA.speedY -= ay;
-                    ballB.speedX += ax;
-                    ballB.speedY += ay;
+                    ballA.speedX += ax;
+                    ballA.speedY += ay;
+
+                    ballB.speedX -= ax;
+                    ballB.speedY -= ay;
 
                     ballA.bounceCount++;
                     ballB.bounceCount++;
