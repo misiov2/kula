@@ -1,14 +1,13 @@
 let balls = [];
 let gravity = 0.2;
-let boostCounter = 0;
 const boostAmount = 10; // Amount of speed boost after every 5 bounces
 let statsVisible = false;
 let bounceCounter = 0;
 let darkModeEnabled = false;
 let fps = 0;
-let unlimitedFPS = true;
 let interval = 0;
-let lastTime = 0;
+let lastUpdateTime = 0;
+let requestId = null;
 
 function addBall() {
     let size = document.getElementById("ballSize").value;
@@ -16,7 +15,7 @@ function addBall() {
     let color = document.getElementById("ballColor").value;
     let imageFile = document.getElementById("ballImage").files[0];
     let imageURL = imageFile ? URL.createObjectURL(imageFile) : null;
-    
+
     createBall(size, speed, color, imageURL);
 }
 
@@ -47,13 +46,10 @@ function createBall(size, speed, color, imageURL) {
     });
 }
 
-function getRandomColor() {
-    return '#' + Math.floor(Math.random()*16777215).toString(16);
-}
-
-function update(time) {
-    if (unlimitedFPS || time - lastTime >= interval) {
-        lastTime = time;
+function update() {
+    const now = performance.now();
+    if (now - lastUpdateTime >= interval) {
+        lastUpdateTime = now;
 
         for (let i = 0; i < balls.length; i++) {
             let ballA = balls[i];
@@ -115,9 +111,9 @@ function update(time) {
         }
 
         document.getElementById("bounceCount").innerText = bounceCounter;
-
-        requestAnimationFrame(update);
     }
+
+    requestId = requestAnimationFrame(update);
 }
 
 function toggleMenu() {
@@ -143,9 +139,21 @@ function clearBalls() {
     document.getElementById("bounceCount").innerText = bounceCounter;
 }
 
-document.getElementById("fpsSelect").addEventListener("change", function() {
-    fps = parseInt(this.value, 10);
+function setFPS(newFPS) {
+    fps = newFPS;
     interval = fps ? 1000 / fps : 0;
+
+    // Restart the animation with the new FPS
+    if (requestId) {
+        cancelAnimationFrame(requestId);
+        lastUpdateTime = performance.now();
+        requestId = requestAnimationFrame(update);
+    }
+}
+
+document.getElementById("fpsSelect").addEventListener("change", function() {
+    setFPS(parseInt(this.value, 10));
 });
 
-update();
+// Initialize FPS settings and start animation
+setFPS(0);
