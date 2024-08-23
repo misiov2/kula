@@ -15,6 +15,13 @@
         <input type="number" id="ballSize" value="50"><br>
         <label for="ballSpeed">Prędkość Piłki:</label><br>
         <input type="number" id="ballSpeed" value="2"><br>
+        
+        <label for="colorPicker">Wybierz Kolor:</label><br>
+        <input type="color" id="colorPicker" value="#ff0000"><br>
+        
+        <label for="imageUpload">Wybierz Obrazek:</label><br>
+        <input type="file" id="imageUpload" accept="image/*"><br><br>
+        
         <button onclick="addBall()">Dodaj Piłkę</button><br><br>
         <label for="statsToggle">Pokaż Statystyki:</label><br>
         <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
@@ -29,6 +36,8 @@
         const boostAmount = 10; // Wartość boosta
         let statsVisible = false;
         let bounceCounter = 0;
+        let selectedImage = null;
+        let selectedColor = '#ff0000';
 
         function addBall() {
             let size = document.getElementById("ballSize").value;
@@ -42,7 +51,14 @@
             ball.style.width = size + "px";
             ball.style.height = size + "px";
             ball.style.borderRadius = "50%";
-            ball.style.backgroundColor = getRandomColor();
+            if (selectedImage) {
+                ball.style.backgroundImage = `url(${selectedImage})`;
+                ball.style.backgroundSize = "cover";
+                ball.style.backgroundColor = 'transparent'; // Transparent color
+            } else {
+                ball.style.backgroundColor = selectedColor;
+                ball.style.backgroundImage = 'none';
+            }
             ball.style.position = "absolute";
             ball.style.left = Math.random() * (window.innerWidth - size) + "px";
             ball.style.top = Math.random() * (window.innerHeight - size) + "px";
@@ -92,7 +108,6 @@
                     ballA.speedY *= -0.9; // Opór powietrza
                     ballA.bounceCount++;
                     bounceCounter++;
-                    animateTitle(); // Dodaj animację przy odbiciu
                     if (ballA.bounceCount % 10 === 0) {
                         ballA.speedY -= boostAmount;
                     }
@@ -126,13 +141,20 @@
             stats.style.display = statsVisible ? "block" : "none";
         }
 
-        function animateTitle() {
-            let title = document.getElementById("title");
-            title.classList.add("pulse");
-            setTimeout(() => {
-                title.classList.remove("pulse");
-            }, 1000); // Czas trwania animacji
-        }
+        document.getElementById("colorPicker").addEventListener("input", function() {
+            selectedColor = this.value;
+        });
+
+        document.getElementById("imageUpload").addEventListener("change", function(event) {
+            let file = event.target.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedImage = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
 
         update();
     </script>
