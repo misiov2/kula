@@ -71,6 +71,8 @@ body, html {
     font-size: 16px;
     color: rgba(0, 0, 0, 0.5);
 }
+
+/* Animacja pulsowania */
 @keyframes pulse {
     0% {
         transform: scale(1);
@@ -89,4 +91,3 @@ body, html {
 .pulse {
     animation: pulse 1s ease-out;
 }
-
