@@ -13,22 +13,7 @@
     
     <div id="menuContainer">
         <div id="menuToggle">&#8226;</div> <!-- Kółko jako przycisk menu -->
-        <div id="menu">
-            <!-- Treść menu -->
-            <label for="ballColor">Ball Color:</label><br>
-            <input type="color" id="ballColor" value="#ff0000"><br>
-            <label for="ballSize">Ball Size:</label><br>
-            <input type="number" id="ballSize" value="50"><br>
-            <label for="ballSpeed">Ball Speed:</label><br>
-            <input type="number" id="ballSpeed" value="2"><br>
-            <button id="addBallButton" onclick="addBall()">Add Ball</button><br><br>
-            <label for="statsToggle">Show Stats:</label>
-            <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
-            <label for="blurAmount">Motion Blur:</label>
-            <input type="range" id="blurAmount" min="0" max="10" value="0" onchange="updateBlur()"><br><br>
-            <button id="clearButton" onclick="clearBalls()">Clear Balls</button><br><br>
-            <button id="backgroundButton" onclick="changeBackground()">Change Background</button>
-        </div>
+        <iframe id="menuFrame" src="menu.html" frameborder="0"></iframe>
     </div>
 
     <div id="stats" style="display: none;">
