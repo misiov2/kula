@@ -46,6 +46,7 @@
         let unlimitedFPS = false;
         let bounceCounter = 0;
         let darkMode = false;
+        const boostAmount = 10; // Amount of boost for every 5th bounce
 
         function addBall() {
             let size = document.getElementById("ballSize").value;
@@ -74,7 +75,7 @@
             }
 
             document.body.appendChild(ball);
-            balls.push({ element: ball, speedX: Math.random() * 10 - 5, speedY: parseFloat(speed) });
+            balls.push({ element: ball, speedX: Math.random() * 10 - 5, speedY: parseFloat(speed), bounceCount: 0 });
         }
 
         function update(time) {
@@ -114,7 +115,11 @@
 
                     if (currentTopA >= window.innerHeight - sizeA) {
                         ballA.speedY *= -0.9;
+                        ballA.bounceCount++;
                         bounceCounter++;
+                        if (ballA.bounceCount % 5 === 0) {
+                            ballA.speedY -= boostAmount;
+                        }
                     } else if (currentTopA <= 0) {
                         ballA.speedY *= -1;
                     } else {
