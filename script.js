@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const menuContainer = document.getElementById('menuContainer');
     const menuToggle = document.getElementById('menuToggle');
+    const menuContainer = document.getElementById('menuContainer');
     const addBallButton = document.getElementById('addBallButton');
     const statsToggle = document.getElementById('statsToggle');
     const statsDiv = document.getElementById('stats');
@@ -9,46 +9,58 @@ document.addEventListener('DOMContentLoaded', () => {
     const backgroundButton = document.getElementById('backgroundButton');
 
     let balls = [];
-    let gravity = 0.2;
     let bounceCounter = 0;
 
-    // Funkcja do tworzenia piłek
+    // Funkcja tworząca nową kulkę
     function createBall(size, speed, color) {
-        let ball = document.createElement('div');
-        ball.className = 'ball';
-        ball.style.width = size + 'px';
-        ball.style.height = size + 'px';
-        ball.style.backgroundColor = color;
-        ball.style.left = Math.random() * (window.innerWidth - size) + 'px';
-        ball.style.top = Math.random() * (window.innerHeight - size) + 'px';
-        document.body.appendChild(ball);
-        balls.push({ element: ball, speedX: Math.random() * 10 - 5, speedY: parseFloat(speed), bounceCount: 0 });
+        const ball = {
+            element: document.createElement('div'),
+            size: size,
+            speedX: speed * (Math.random() * 2 - 1),
+            speedY: speed * (Math.random() * 2 - 1),
+            bounceCount: 0
+        };
+
+        ball.element.style.width = size + 'px';
+        ball.element.style.height = size + 'px';
+        ball.element.style.borderRadius = '50%';
+        ball.element.style.backgroundColor = color;
+        ball.element.style.position = 'absolute';
+        ball.element.style.left = Math.random() * (window.innerWidth - size) + 'px';
+        ball.element.style.top = Math.random() * (window.innerHeight - size) + 'px';
+
+        document.body.appendChild(ball.element);
+        balls.push(ball);
         updateBallCount();
     }
 
-    // Funkcja do aktualizacji liczby piłek
+    // Funkcja aktualizująca liczbę kulek
     function updateBallCount() {
         document.getElementById('ballCount').innerText = balls.length;
     }
 
-    // Funkcja do aktualizacji pozycji piłek
+    // Funkcja aktualizująca pozycję kulek
     function update() {
+        const gravity = 0.1;
+
         for (let i = 0; i < balls.length; i++) {
-            let ballA = balls[i];
-            let currentTopA = parseFloat(ballA.element.style.top);
-            let currentLeftA = parseFloat(ballA.element.style.left);
-            let sizeA = parseFloat(ballA.element.style.height);
+            const ballA = balls[i];
+            const currentLeftA = parseInt(ballA.element.style.left);
+            const currentTopA = parseInt(ballA.element.style.top);
+            const sizeA = ballA.size;
 
+            // Sprawdzenie kolizji z innymi kulkami
             for (let j = i + 1; j < balls.length; j++) {
-                let ballB = balls[j];
-                let currentTopB = parseFloat(ballB.element.style.top);
-                let currentLeftB = parseFloat(ballB.element.style.left);
-                let sizeB = parseFloat(ballB.element.style.height);
+                const ballB = balls[j];
+                const currentLeftB = parseInt(ballB.element.style.left);
+                const currentTopB = parseInt(ballB.element.style.top);
+                const sizeB = ballB.size;
 
-                let dx = currentLeftB - currentLeftA;
-                let dy = currentTopB - currentTopA;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                let minDistance = sizeA / 2 + sizeB / 2; 
+                const dx = currentLeftB - currentLeftA;
+                const dy = currentTopB - currentTopA;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const minDistance = sizeA / 2 + sizeB / 2;
+
                 if (distance < minDistance) {
                     let angle = Math.atan2(dy, dx);
                     let targetX = currentLeftA + Math.cos(angle) * minDistance;
@@ -78,10 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            // Aktualizacja pozycji kulki
             ballA.element.style.left = currentLeftA + ballA.speedX + 'px';
             ballA.element.style.top = currentTopA + ballA.speedY + 'px';
 
-            // Odbicie od krawędzi ekranu
+            // Odwrócenie kierunku ruchu po uderzeniu w krawędź ekranu
             if (currentLeftA <= 0 || currentLeftA + sizeA >= window.innerWidth) {
                 ballA.speedX *= -1;
             }
@@ -90,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ballA.speedY *= -1;
             }
 
+            // Dodanie grawitacji
             ballA.speedY += gravity;
         }
 
