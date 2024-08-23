@@ -93,6 +93,18 @@ document.addEventListener("DOMContentLoaded", function() {
         requestAnimationFrame(update);
     }
 
+    function toggleMenu() {
+        let menuContainer = document.getElementById("menuContainer");
+        menuContainer.classList.toggle("expanded");
+
+        let toggle = document.getElementById("menuToggle");
+        if (menuContainer.classList.contains("expanded")) {
+            toggle.innerHTML = "&#8211;"; // Symbol minus
+        } else {
+            toggle.innerHTML = "&#8226;"; // Kółko jako przycisk menu
+        }
+    }
+
     function toggleStats() {
         statsVisible = !statsVisible;
         let stats = document.getElementById("stats");
@@ -129,4 +141,7 @@ document.addEventListener("DOMContentLoaded", function() {
     window.changeBackground = changeBackground;
     window.toggleStats = toggleStats;
     window.updateBlur = updateBlur;
+
+    // Set up menu toggle
+    document.getElementById("menuToggle").addEventListener("click", toggleMenu);
 });
