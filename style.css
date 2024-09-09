@@ -1,95 +1,148 @@
+/* Global Styles */
 body, html {
     margin: 0;
     padding: 0;
     height: 100%;
     overflow: hidden;
-    position: relative;
-    background-color: white;
+    font-family: 'Quicksand', sans-serif;
+    background-color: #f0f0f5;
+    transition: background-color 0.3s ease;
 }
 
 body.dark-mode {
-    background-color: #333;
+    background-color: #2c2c2c;
     color: #fff;
 }
 
-body.dark-mode #menu {
-    background-color: rgba(50, 50, 50, 0.8);
-}
-
-body.dark-mode #helpBox {
-    background-color: #555;
-}
-
-body.dark-mode #stats {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-@font-face {
-    font-family: 'Quicksand';
-    src: url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
-}
-
-#content {
+/* Title Style */
+#content h1 {
+    font-size: 72px;
+    color: rgba(0, 0, 0, 0.1);
+    text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    margin: 0;
+    text-align: center;
+    transform: translate(-50%, -50%);
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    font-family: 'Quicksand', sans-serif;
-}
-
-#content h1 {
-    font-size: 48px;
-    color: rgba(0, 0, 0, 0.1);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     filter: blur(2px);
-    margin: 0;
 }
 
+/* Ball Style */
 .ball {
     width: 50px;
     height: 50px;
     background-color: red;
     border-radius: 50%;
     position: absolute;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.ball:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Menu Style */
 #menu {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 5px;
+    top: 20px;
+    left: 20px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-#menu input[type="number"], #menu input[type="color"], #menu input[type="file"], #menu select {
-    margin-bottom: 5px;
+body.dark-mode #menu {
+    background-color: rgba(50, 50, 50, 0.8);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
+#menu label {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+    border-color: #008cba;
+}
+
+/* Button Style */
+.btn {
+    padding: 10px 20px;
+    background-color: #008cba;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+}
+
+.btn:hover {
+    background-color: #005f7a;
+    transform: scale(1.05);
+}
+
+body.dark-mode .btn {
+    background-color: #333;
+}
+
+body.dark-mode .btn:hover {
+    background-color: #555;
+}
+
+/* Help Box (M Icon) Style */
 #helpBox {
     position: absolute;
     top: 10px;
     left: 10px;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     background-color: black;
     color: yellow;
-    font-size: 32px;
+    font-size: 40px;
     font-weight: bold;
     text-align: center;
-    line-height: 50px;
+    line-height: 60px;
     border-radius: 50%;
     cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+#helpBox:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode #helpBox {
+    background-color: #555;
+}
+
+/* Stats Box Style */
 #stats {
     position: absolute;
     top: 10px;
-    right: 10px;
-    font-family: 'Quicksand', sans-serif;
+    right: 20px;
     font-size: 16px;
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba(0, 0, 0, 0.7);
+}
+
+body.dark-mode #stats {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .trail {
