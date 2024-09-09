@@ -12,27 +12,27 @@
     </div>
     <div id="menu" style="display: none;">
         <label for="ballSize">Ball Size:</label><br>
-        <input type="number" id="ballSize" value="50"><br>
+        <input type="number" id="ballSize" value="50" class="input-field"><br>
         <label for="ballSpeed">Ball Speed:</label><br>
-        <input type="number" id="ballSpeed" value="2"><br>
+        <input type="number" id="ballSpeed" value="2" class="input-field"><br>
         <label for="ballColor">Ball Color:</label><br>
-        <input type="color" id="ballColor" value="#ff0000"><br>
+        <input type="color" id="ballColor" value="#ff0000" class="input-field"><br>
         <label for="ballImage">Ball Image:</label><br>
-        <input type="file" id="ballImage" accept="image/*"><br><br>
-        <button onclick="addBall()">Add Ball</button><br><br>
+        <input type="file" id="ballImage" accept="image/*" class="input-field"><br><br>
+        <button class="btn" onclick="addBall()">Add Ball</button><br><br>
         <label for="statsToggle">Show Stats:</label><br>
         <input type="checkbox" id="statsToggle" onchange="toggleStats()"><br><br>
         <label for="darkModeToggle">Dark Mode:</label><br>
         <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()"><br><br>
         <label for="fpsSelect">FPS:</label><br>
-        <select id="fpsSelect">
+        <select id="fpsSelect" class="input-field">
             <option value="0">Unlimited</option>
             <option value="30">30 FPS</option>
             <option value="60">60 FPS</option>
             <option value="120">120 FPS</option>
             <option value="165">165 FPS</option>
         </select><br><br>
-        <button onclick="clearBalls()">Clear Balls</button>
+        <button class="btn" onclick="clearBalls()">Clear Balls</button>
     </div>
     <div id="helpBox" onclick="toggleMenu()">M</div>
     <div id="stats" style="display: none;">Bounce Count: <span id="bounceCount">0</span></div>
